@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-/**
+/** Utilities for tests, including test graphs in string form.
  *
  * @author kiefer
  */
