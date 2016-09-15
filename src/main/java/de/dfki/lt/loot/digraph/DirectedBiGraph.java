@@ -15,7 +15,7 @@ import java.util.Queue;
  * @author Joerg Steffen, DFKI
  * @version $Id$
  */
-public class DirectedBiGraph<EdgeInfo> extends DirectedGraph<EdgeInfo>
+public class DirectedBiGraph<EdgeInfo> extends DiGraph<EdgeInfo>
   implements AbstractBiGraph<EdgeInfo> {
 
  /** For each vertex, this contains the outgoing and incoming edges of this

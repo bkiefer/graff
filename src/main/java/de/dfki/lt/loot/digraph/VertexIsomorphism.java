@@ -9,20 +9,20 @@ import java.util.Map;
 public class VertexIsomorphism<ValueType>
   implements VertexPropertyMap<ValueType> {
 
-  private DirectedGraph<?> _graph;
+  private DiGraph<?> _graph;
 
   private ArrayList<ValueType> _map;
 
   private Map<ValueType, Integer> _inverseMap;
 
-  public VertexIsomorphism(DirectedGraph<?> graph,
+  public VertexIsomorphism(DiGraph<?> graph,
     Map<ValueType, Integer> invMap) {
     _map = new ArrayList<ValueType>();
     _inverseMap = invMap;
     _graph = graph;
   }
 
-  public VertexIsomorphism(DirectedGraph<?> graph) {
+  public VertexIsomorphism(DiGraph<?> graph) {
     this(graph, new HashMap<ValueType, Integer>());
   }
 

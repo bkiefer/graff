@@ -16,19 +16,19 @@ import org.junit.Test;
 import de.dfki.lt.loot.digraph.BinaryPredicate.EqualsPredicate;
 
 /**
- * {@link TestDirectedGraph} is a test class for {@link DirectedGraph}.
+ * {@link TestDirectedGraph} is a test class for {@link DiGraph}.
  *
  * @author Joerg Steffen, DFKI
  * @version $Id$
  */
 public class TestDirectedGraph {
 
-  public static <T> int countEdges(DirectedGraph<T> graph) {
+  public static <T> int countEdges(DiGraph<T> graph) {
     final int[] result = { 0 };
     graph.dfs(new GraphVisitorAdapter<T>() {
       @Override
       @SuppressWarnings("unused")
-      public void discoverVertex(int v, DirectedGraph<T> g) {
+      public void discoverVertex(int v, DiGraph<T> g) {
         for (Edge<T> e : g.getOutEdges(v)) ++result[0];
       }
     });
@@ -44,7 +44,7 @@ public class TestDirectedGraph {
    * @throws IOException
    *           if there is an error when reading the graph
    */
-  public static void readGraph(DirectedGraph<String> result, Reader in)
+  public static void readGraph(DiGraph<String> result, Reader in)
       throws IOException {
 
     BufferedReader bin = new BufferedReader(in);
@@ -100,7 +100,7 @@ public class TestDirectedGraph {
    * @throws IOException
    *           if there is an error when reading the graph
    */
-  public static void readGraphWithWeights(DirectedGraph<Integer> result, Reader in)
+  public static void readGraphWithWeights(DiGraph<Integer> result, Reader in)
       throws IOException {
 
     BufferedReader bin = new BufferedReader(in);
@@ -156,7 +156,7 @@ public class TestDirectedGraph {
     }
   }
 
-  DirectedGraph<String> graph;
+  DiGraph<String> graph;
   VertexPropertyMap<String> names;
   static String[] vertexNames = {"A", "B", "C"};
   int[] vertexIds;
@@ -165,7 +165,7 @@ public class TestDirectedGraph {
   @Before
   public void makeGraph() {
     // create empty graph
-    graph = new DirectedGraph<>();
+    graph = new DiGraph<>();
 
     // vertices have names
     names = new VertexListPropertyMap<>(graph);
@@ -193,7 +193,7 @@ public class TestDirectedGraph {
 
   @Test
   public void testNewVertex() {
-    DirectedGraph dg = new DirectedGraph();
+    DiGraph dg = new DiGraph();
     assertEquals(0, dg.getNumberOfVertices());
     int v = dg.newVertex();
     assertEquals(1, dg.getNumberOfVertices());
@@ -202,7 +202,7 @@ public class TestDirectedGraph {
 
   @Test
   public void testNewEdge() {
-    DirectedGraph<String> dg = new DirectedGraph<>();
+    DiGraph<String> dg = new DiGraph<>();
     assertEquals(0, dg.getNumberOfVertices());
     int from = dg.newVertex();
     int to = dg.newVertex();
@@ -219,7 +219,7 @@ public class TestDirectedGraph {
 
   @Test
   public void testRemoveEdge() {
-    DirectedGraph<String> dg = new DirectedGraph<>();
+    DiGraph<String> dg = new DiGraph<>();
     int from = dg.newVertex();
     int to = dg.newVertex();
     Edge<String> e = dg.newEdge(from + "->" + to, from, to);
@@ -231,7 +231,7 @@ public class TestDirectedGraph {
 
   @Test
   public void testRemoveVertex() {
-    DirectedGraph<String> dg = new DirectedGraph<>();
+    DiGraph<String> dg = new DiGraph<>();
     int wech = dg.newVertex();
     int from = dg.newVertex();
     int to = dg.newVertex();

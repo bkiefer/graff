@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.dfki.lt.loot.digraph.DirectedGraph;
+import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 
 public class TransitiveClosure {
   /** Recursive helper function for the acyclicClosure method */
-  private static <EdgeInfo> void dfsVisit(DirectedGraph<EdgeInfo> graph,
+  private static <EdgeInfo> void dfsVisit(DiGraph<EdgeInfo> graph,
       VertexPropertyMap<Set<Integer>> closure, int vertex) {
     Set<Integer> myClosure = new HashSet<Integer>();
     closure.put(vertex, myClosure);
@@ -33,7 +33,7 @@ public class TransitiveClosure {
    *          reachable nodes.
    */
   public static <EdgeInfo> VertexPropertyMap<Set<Integer>>
-  acyclicClosure(DirectedGraph<EdgeInfo> graph) {
+  acyclicClosure(DiGraph<EdgeInfo> graph) {
     VertexPropertyMap<Set<Integer>> closure =
         new VertexListPropertyMap<Set<Integer>>(graph);
     for(int vertex = 0; vertex < graph.getNumberOfVertices(); ++vertex) {
@@ -138,14 +138,14 @@ public class TransitiveClosure {
    *    VertexPropertyMap that relates the vertices of the reduction to the
    *    SCCs of the original graph.
    */
-  public static <EdgeInfo> DirectedGraph<EdgeInfo>
-  acyclicReduction(DirectedGraph<EdgeInfo> graph){
+  public static <EdgeInfo> DiGraph<EdgeInfo>
+  acyclicReduction(DiGraph<EdgeInfo> graph){
     // first compute the strongly connected components
     TarjanVisitor<EdgeInfo> visitor = new TarjanVisitor<EdgeInfo>();
     graph.dfs(visitor);
     List<List<Integer>> components = visitor.getSCCs();
     // acyclic reduction of graph
-    DirectedGraph<EdgeInfo> reduction = new DirectedGraph<EdgeInfo>();
+    DiGraph<EdgeInfo> reduction = new DiGraph<EdgeInfo>();
     // map new vertices to old vertices
     VertexPropertyMap<Integer> orig2redRep =
         new VertexListPropertyMap<Integer>(graph);
@@ -194,8 +194,8 @@ public class TransitiveClosure {
    */
   @SuppressWarnings("unchecked")
   public static <EdgeInfo> VertexPropertyMap<Set<Integer>>
-  transitiveClosure(DirectedGraph<EdgeInfo> graph, boolean reflexive) {
-    DirectedGraph<EdgeInfo> reduction = acyclicReduction(graph);
+  transitiveClosure(DiGraph<EdgeInfo> graph, boolean reflexive) {
+    DiGraph<EdgeInfo> reduction = acyclicReduction(graph);
 
     // now do transitive closure on the acyclic graph
     VertexPropertyMap<Set<Integer>> redClosure = acyclicClosure(reduction);
@@ -230,20 +230,20 @@ public class TransitiveClosure {
   }
 
   public static <EdgeInfo>
-  void warshallTransitiveClosure(DirectedGraph<EdgeInfo> g) {
+  void warshallTransitiveClosure(DiGraph<EdgeInfo> g) {
     // for (int k = 0; k < n; k++)
     //  for (int i = 0; i < n; i++)
     //    for (int j = 0; j < n; j++)
     //      R[i,j] = R[i,j] || (R[i,k] && R[k,j]);
 
-    for(DirectedGraph<EdgeInfo>.VertexIterator it_k = g.vertices();
+    for(DiGraph<EdgeInfo>.VertexIterator it_k = g.vertices();
         it_k.hasNext();) {
       int k = it_k.next();
       // if (! g.hasEdge(vi, vi)) g.newEdge(null, vi, vi);
-      for(DirectedGraph<EdgeInfo>.VertexIterator it_i = g.vertices();
+      for(DiGraph<EdgeInfo>.VertexIterator it_i = g.vertices();
           it_i.hasNext();) {
         int i = it_i.next();
-        for (DirectedGraph<EdgeInfo>.VertexIterator it_j = g.vertices();
+        for (DiGraph<EdgeInfo>.VertexIterator it_j = g.vertices();
             it_j.hasNext();) {
           int j = it_j.next();
           if (! g.hasEdge(i, j))

@@ -10,7 +10,7 @@ import java.util.HashSet;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.dfki.lt.loot.digraph.DirectedGraph;
+import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.TestDirectedGraph;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 
@@ -26,7 +26,7 @@ public class TestTarjanVisitor {
   /**
    * Contains the graph on which the tests run.
    */
-  private static DirectedGraph<String> graph;
+  private static DiGraph<String> graph;
 
 
   /**
@@ -50,7 +50,7 @@ public class TestTarjanVisitor {
           + "q --> x\n"
           + "y --> x\n";
 
-    graph = new DirectedGraph<String>();
+    graph = new DiGraph<String>();
     TestDirectedGraph.readGraph(graph, new StringReader(graphString));
   }
 

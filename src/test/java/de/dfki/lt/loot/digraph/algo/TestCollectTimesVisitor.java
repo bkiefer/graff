@@ -1,5 +1,9 @@
-package de.dfki.lt.loot.digraph;
+package de.dfki.lt.loot.digraph.algo;
 
+import de.dfki.lt.loot.digraph.DiGraph;
+import de.dfki.lt.loot.digraph.TestDirectedGraph2;
+import de.dfki.lt.loot.digraph.VertexPropertyMap;
+import de.dfki.lt.loot.digraph.algo.CollectTimesVisitor;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
@@ -10,6 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -24,9 +29,9 @@ public class TestCollectTimesVisitor {
   @Test
   public void testDFS() throws IOException {
     // read in graph
-    DirectedGraph<String> graph = new DirectedGraph<String>();
-    DirectedGraphTest.readGraph(graph,
-        new StringReader(DirectedGraphTest.exampleGraph));
+    DiGraph<String> graph = new DiGraph<String>();
+    TestDirectedGraph2.readGraph(graph,
+        new StringReader(TestDirectedGraph2.exampleGraph));
     //System.out.println(graph.toString(graph.getPropertyMap("names")));
 
     // use DFS
@@ -60,9 +65,9 @@ public class TestCollectTimesVisitor {
   @Test
   public void testBFS() throws IOException {
     // read in graph
-    DirectedGraph<String> graph = new DirectedGraph<String>();
-    DirectedGraphTest.readGraph(graph,
-        new StringReader(DirectedGraphTest.exampleBfsGraph));
+    DiGraph<String> graph = new DiGraph<String>();
+    TestDirectedGraph2.readGraph(graph,
+        new StringReader(TestDirectedGraph2.exampleBfsGraph));
 
     // use BFS
     BfsTimesVisitor<String> bfsVisitor = new BfsTimesVisitor<String>();

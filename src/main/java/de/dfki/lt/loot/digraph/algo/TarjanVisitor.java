@@ -2,7 +2,7 @@ package de.dfki.lt.loot.digraph.algo;
 
 import java.util.*;
 
-import de.dfki.lt.loot.digraph.DirectedGraph;
+import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.GraphVisitorAdapter;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
@@ -26,7 +26,7 @@ public class TarjanVisitor<EdgeInfo>
   }
 
   @Override
-  public void startVertex(int v, DirectedGraph<EdgeInfo> g) {
+  public void startVertex(int v, DiGraph<EdgeInfo> g) {
     // do the initialization
     if (_components == null) {
       _discovery = new VertexListPropertyMap<Integer>(g);
@@ -38,7 +38,7 @@ public class TarjanVisitor<EdgeInfo>
   }
 
   @Override
-  public void discoverVertex(int v, DirectedGraph<EdgeInfo> g) {
+  public void discoverVertex(int v, DiGraph<EdgeInfo> g) {
     ++time;
     // i also use _low to detect if a vertex is still in the queue, see later
     _low.put(v, time);
@@ -51,7 +51,7 @@ public class TarjanVisitor<EdgeInfo>
   }
 
   @Override
-  public void finishVertex(int v, DirectedGraph<EdgeInfo> g) {
+  public void finishVertex(int v, DiGraph<EdgeInfo> g) {
     // do the computation of the lowest reachable vertex now
     /*
     System.out.println("fin: " + g.getPropertyMap("names").get(v)

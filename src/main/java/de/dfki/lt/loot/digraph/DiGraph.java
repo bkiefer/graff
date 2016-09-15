@@ -28,7 +28,7 @@ import java.util.Queue;
  * @author Joerg Steffen, DFKI
  * @version $Id$
  */
-public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
+public class DiGraph<EI> implements Graph<EI> {
 
   /**
    * Contains the path to the dot.exe delivered with Graphviz.
@@ -39,7 +39,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
  /** For each vertex, this contains the outgoing and incoming edges of this
    *  graph.
    */
-  protected ArrayList<EdgeContainer<EdgeInfo>> _outEdges;
+  protected ArrayList<EdgeContainer<EI>> _outEdges;
 
   /** Check internally if an edge is added twice */
   protected boolean _checkMultiEdges;
@@ -185,7 +185,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
 
     @Override
     public boolean add(Edge<EI> e) {
-      this.put(e.getTarget(), e);
+      put(e.getTarget(), e);
       return false;
     }
 
@@ -207,7 +207,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
     //}
 
     public Edge<EI> findTarget(int to) {
-      return this.get(to);
+      return get(to);
     }
   }
 
@@ -215,14 +215,14 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
     _checkMultiEdges = what;
   }
 
-  protected EdgeContainer<EdgeInfo> newEdgeList() {
-    return _checkMultiEdges ? new SetEdgeContainer<EdgeInfo>() :
-        new ArrayListEdgeContainer<EdgeInfo>();
+  protected EdgeContainer<EI> newEdgeList() {
+    return _checkMultiEdges ? new SetEdgeContainer<EI>() :
+        new ArrayListEdgeContainer<EI>();
   }
 
-  protected EdgeContainer<EdgeInfo>
-    getEdgeList(ArrayList<EdgeContainer<EdgeInfo>> edges, int vertex) {
-    EdgeContainer<EdgeInfo> edgeList = edges.get(vertex);
+  protected EdgeContainer<EI>
+    getEdgeList(ArrayList<EdgeContainer<EI>> edges, int vertex) {
+    EdgeContainer<EI> edgeList = edges.get(vertex);
     if (edgeList == null) {
       edgeList = newEdgeList();
       edges.set(vertex, edgeList);
@@ -238,7 +238,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *
    *  For secure changing of source node, @see changeStartVertex
    */
-  protected void setFrom(Edge<EdgeInfo> edge, int from) {
+  protected void setFrom(Edge<EI> edge, int from) {
     edge.setSource(from);
     getEdgeList(_outEdges, from).add(edge);
   }
@@ -251,7 +251,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *
    *  For secure changing of target node, @see changeEndVertex
    */
-  protected void setTo(Edge<EdgeInfo> edge, int to) {
+  protected void setTo(Edge<EI> edge, int to) {
     edge.setTarget(to);
   }
 
@@ -261,15 +261,15 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
 
   /** This creates a new instance of <code>DirectedGraph</code>.
    */
-  public DirectedGraph() {
-    _outEdges = new ArrayList<EdgeContainer<EdgeInfo>>();
+  public DiGraph() {
+    _outEdges = new ArrayList<EdgeContainer<EI>>();
     _deletedVertices = new BitSet();
     _vertexPropertyMaps = new HashMap<String, VertexPropertyMap<?>>();
     _vertexBooleanPropertyMaps = new HashMap<String, BitSet>();
   }
 
   /** Create a new graph with n vertices and no edges */
-  public DirectedGraph(int n) {
+  public DiGraph(int n) {
     this();
     for (int i = 0; i < n; ++i) {
       newVertex();
@@ -364,8 +364,8 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
   }
 
   /** return the edges emerging from vertex */
-  public Iterable<Edge<EdgeInfo>> getOutEdges(int vertex) {
-    EdgeContainer<EdgeInfo> result = _outEdges.get(vertex);
+  public Iterable<Edge<EI>> getOutEdges(int vertex) {
+    EdgeContainer<EI> result = _outEdges.get(vertex);
     if (result == null)
       return Collections.emptyList();
     // return Collections.unmodifiableCollection(result);
@@ -389,22 +389,22 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *                  vertex of the graph
    * @return a newly created {@link Edge}
    */
-  public Edge<EdgeInfo> newEdge(EdgeInfo edgeInfo, int from, int to) {
+  public Edge<EI> newEdge(EI edgeInfo, int from, int to) {
     assert(isVertex(from) && isVertex(to));
-    Edge<EdgeInfo> edge = new Edge<EdgeInfo>(edgeInfo, from, to);
+    Edge<EI> edge = new Edge<EI>(edgeInfo, from, to);
     setFrom(edge, from);
     setTo(edge, to);
     return edge;
   }
 
   /** remove the given Edge */
-  public void removeEdge(Edge<EdgeInfo> edge) {
+  public void removeEdge(Edge<EI> edge) {
     _outEdges.get(edge.getSource()).removeEdge(edge);
   }
 
   /** remove the given Edges */
-  public void removeEdges(List<Edge<EdgeInfo>> edges) {
-    for (Edge<EdgeInfo> edge : edges) {
+  public void removeEdges(List<Edge<EI>> edges) {
+    for (Edge<EI> edge : edges) {
       removeEdge(edge);
     }
   }
@@ -413,7 +413,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *
    * @param anEndVertex the new end vertex
    */
-  public void changeEndVertex(Edge<EdgeInfo> edge, int anEndVertex) {
+  public void changeEndVertex(Edge<EI> edge, int anEndVertex) {
     // set new end vertex
     setTo(edge, anEndVertex);
   }
@@ -423,7 +423,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *
    * @param aStartVertex the new end vertex
    */
-  public void changeStartVertex(Edge<EdgeInfo> edge, int aStartVertex) {
+  public void changeStartVertex(Edge<EI> edge, int aStartVertex) {
     // remove edge from old start vertex's outgoing edge list
     _outEdges.get(edge.getSource()).removeEdge(edge);
 
@@ -441,12 +441,12 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    * @param binPred a {@link BinaryPredicate} used to compare the edge infos
    * @return an {@link Edge}s that matches or <code>null</code>
    */
-  public Edge<EdgeInfo> findEdge(
+  public Edge<EI> findEdge(
       int vertex,
-      EdgeInfo anEdgeInfo,
-      Comparator<EdgeInfo> comp) {
+      EI anEdgeInfo,
+      Comparator<EI> comp) {
 
-    for (Edge<EdgeInfo> edge : getOutEdges(vertex)) {
+    for (Edge<EI> edge : getOutEdges(vertex)) {
       if (comp.compare(edge.getInfo(), anEdgeInfo) == 0) {
         return edge;
       }
@@ -456,14 +456,14 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
 
 
   private class FilteredEdgeIterator
-    implements Iterator<Edge<EdgeInfo>>, Iterable<Edge<EdgeInfo>> {
+    implements Iterator<Edge<EI>>, Iterable<Edge<EI>> {
 
-    final private EdgeInfo _info;
-    final private Comparator<EdgeInfo> _comp;
-    private Iterator<Edge<EdgeInfo>> _it;
-    private Edge<EdgeInfo> _next;
+    final private EI _info;
+    final private Comparator<EI> _comp;
+    private Iterator<Edge<EI>> _it;
+    private Edge<EI> _next;
 
-    public FilteredEdgeIterator(int v, EdgeInfo i, Comparator<EdgeInfo> c) {
+    public FilteredEdgeIterator(int v, EI i, Comparator<EI> c) {
       _info = i;
       _comp = c;
       _it = getOutEdges(v).iterator();
@@ -484,8 +484,8 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
     }
 
     @Override
-    public Edge<EdgeInfo> next() {
-      Edge<EdgeInfo> result = _next;
+    public Edge<EI> next() {
+      Edge<EI> result = _next;
       findNext();
       return result;
     }
@@ -494,7 +494,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
     public void remove() { throw new UnsupportedOperationException(); }
 
     @Override
-    public Iterator<Edge<EdgeInfo>> iterator() { return this; }
+    public Iterator<Edge<EI>> iterator() { return this; }
   }
 
 
@@ -507,10 +507,10 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    * @param binPred a {@link BinaryPredicate} used to compare the edge infos
    * @return a <code>List</code> of {@link Edge}s with matching edges
    */
-  public Iterable<Edge<EdgeInfo>> findEdges(
+  public Iterable<Edge<EI>> findEdges(
       int vertex,
-      EdgeInfo anEdgeInfo,
-      Comparator<EdgeInfo> comp) {
+      EI anEdgeInfo,
+      Comparator<EI> comp) {
     return new FilteredEdgeIterator(vertex, anEdgeInfo, comp);
   }
 
@@ -523,14 +523,14 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    * @param binPred a {@link BinaryPredicate} used to compare the edge infos
    * @return a <code>List</code> of {@link Edge}s with matching edges
    */
-  public List<Edge<EdgeInfo>> findEdges(
-      EdgeInfo anEdgeInfo,
-      Comparator<EdgeInfo> comp) {
-    LinkedList<Edge<EdgeInfo>> result = new LinkedList<Edge<EdgeInfo>>();
+  public List<Edge<EI>> findEdges(
+      EI anEdgeInfo,
+      Comparator<EI> comp) {
+    LinkedList<Edge<EI>> result = new LinkedList<Edge<EI>>();
 
     for (int vertex = 0; vertex < _outEdges.size(); ++vertex) {
       if (! isDeletedVertex(vertex)) {
-        for (Edge<EdgeInfo> e : findEdges(vertex, anEdgeInfo, comp)) {
+        for (Edge<EI> e : findEdges(vertex, anEdgeInfo, comp)) {
           result.add(e);
         }
       }
@@ -591,11 +591,11 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
     // remove the edges to this vertex from other vertices edge lists
     for (int v = 0; v < _outEdges.size(); ++v) {
       if (isVertex(v)) {
-        EdgeContainer<EdgeInfo> out = _outEdges.get(v);
+        EdgeContainer<EI> out = _outEdges.get(v);
         if (out != null) {
-          Iterator<Edge<EdgeInfo>> edgeIt = out.iterator();
+          Iterator<Edge<EI>> edgeIt = out.iterator();
           while (edgeIt.hasNext()) {
-            Edge<EdgeInfo> edge = edgeIt.next();
+            Edge<EI> edge = edgeIt.next();
             if (! isVertex(edge.getTarget()))
               edgeIt.remove();
           }
@@ -621,9 +621,9 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
     _deletedVertices.clear();
 
     // now renumber the edge targets
-    for (EdgeContainer<EdgeInfo> out : _outEdges) {
+    for (EdgeContainer<EI> out : _outEdges) {
       if (out != null) {
-        for (Edge<EdgeInfo> edge : out) {
+        for (Edge<EI> edge : out) {
           edge.setSource(newNumber[edge.getSource()]);
           edge.setTarget(newNumber[edge.getTarget()]);
         }
@@ -725,7 +725,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
                 ? vertex
                 : propMap.get(vertex))
         .append(newline).append(" == out ===== ").append(newline);
-      for (Edge<EdgeInfo> edge : getOutEdges(vertex)) {
+      for (Edge<EI> edge : getOutEdges(vertex)) {
         strRep.append(edge.toString(propMap)).append(newline);
       }
     }
@@ -754,16 +754,16 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    */
   @Override
   public String toString() {
-    return this.toString(getPropertyMap("names"));
+    return toString(getPropertyMap("names"));
   }
 
 
   public String asMatrix() {
     StringBuilder sb = new StringBuilder();
-    for(DirectedGraph<EdgeInfo>.VertexIterator it = vertices();
+    for(DiGraph<EI>.VertexIterator it = vertices();
         it.hasNext();) {
       int vi = it.next();
-      for(DirectedGraph<EdgeInfo>.VertexIterator jt = vertices();
+      for(DiGraph<EI>.VertexIterator jt = vertices();
           jt.hasNext();) {
         int vj = jt.next();
         sb.append(hasEdge(vi, vj) ? '*' : '.');
@@ -803,17 +803,17 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *  @param visited a BitSet indicating if the vertex is visited for the first
    *      time
    *  @param converse if true, the dfs runs on a lazy converse of a
-   *      {@link DirectedGraph}, which means that the edge direction is inverse,
+   *      {@link DiGraph}, which means that the edge direction is inverse,
    *      i.e., getSource() returns the target node, getTarget() the source
    */
   private void dfsVisit(int vertex,
-                        GraphVisitor<EdgeInfo> visitor,
+                        GraphVisitor<EI> visitor,
                         BitSet visited,
                         boolean converse) {
     visited.set(vertex);  // vertex gets gray
     visitor.discoverVertex(vertex, this);
 
-    for (Edge<EdgeInfo> edge : getOutEdges(vertex)) {
+    for (Edge<EI> edge : getOutEdges(vertex)) {
       int target = converse ? edge.getSource() : edge.getTarget();
       // is the target vertex white?
       if (! visited.get(target)) {
@@ -833,7 +833,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *  The desired functionality can be implemented by the given {@link
    *  GraphVisitor} argument.
    */
-  public void dfs(GraphVisitor<EdgeInfo> visitor) {
+  public void dfs(GraphVisitor<EI> visitor) {
     BitSet visited = new BitSet();
     for(int vertex = 0; vertex < _outEdges.size(); ++vertex) {
       if (! isDeletedVertex(vertex) && ! visited.get(vertex)) {
@@ -848,7 +848,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *  The desired functionality can be implemented by the given {@link
    *  GraphVisitor} argument.
    */
-  public void dfs(int vertex, GraphVisitor<EdgeInfo> visitor) {
+  public void dfs(int vertex, GraphVisitor<EI> visitor) {
     dfsVisit(vertex, visitor, new BitSet(), false);
   }
 
@@ -858,10 +858,10 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *  GraphVisitor} argument.
    *  @param vertex the vertex to start the dfs at
    *  @param converse if true, the dfs runs on a lazy converse of a
-   *       {@link DirectedGraph}, which means that the edge direction is inverse,
+   *       {@link DiGraph}, which means that the edge direction is inverse,
    *       i.e., getSource() returns the target node, getTarget() the source
    */
-  public void dfsConverse(int vertex, GraphVisitor<EdgeInfo> visitor) {
+  public void dfsConverse(int vertex, GraphVisitor<EI> visitor) {
     dfsVisit(vertex, visitor, new BitSet(), true);
   }
 
@@ -873,7 +873,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *  a queue, consecutively. The desired functionality can be
    *  implemented by the given {@link GraphVisitor} argument.
    */
-  private void bfsVisit(int startVertex, GraphVisitor<EdgeInfo> visitor,
+  private void bfsVisit(int startVertex, GraphVisitor<EI> visitor,
                         BitSet visited, boolean converse) {
 
     Queue<Integer> active = new LinkedList<Integer>();
@@ -882,7 +882,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
     visitor.discoverVertex(startVertex, this);
     while (active.peek() != null) {
       int vertex = active.poll();
-      for (Edge<EdgeInfo> outEdge : getOutEdges(vertex)) {
+      for (Edge<EI> outEdge : getOutEdges(vertex)) {
         int target = converse ? outEdge.getSource() : outEdge.getTarget();
         if (! visited.get(target)) {
           active.offer(target);
@@ -903,7 +903,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *  a queue, consecutively. The desired functionality can be
    *  implemented by the given {@link GraphVisitor} argument.
    */
-  public void bfs(GraphVisitor<EdgeInfo> visitor) {
+  public void bfs(GraphVisitor<EI> visitor) {
     BitSet visited = new BitSet(); // all bits are initially false
     for(int vertex = 0; vertex < _outEdges.size(); ++vertex) {
       if (! isDeletedVertex(vertex) && ! visited.get(vertex)) {
@@ -918,7 +918,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *  The desired functionality can be implemented by the given
    *  {@link GraphVisitor} argument.
    */
-  public void bfs(int vertex, GraphVisitor<EdgeInfo> visitor) {
+  public void bfs(int vertex, GraphVisitor<EI> visitor) {
     bfsVisit(vertex, visitor, new BitSet(), false);
   }
 
@@ -930,7 +930,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    * @param printer a class with which special printing can be handled
    * @throws <code>IOException</code> if an error ccurs when writing the file
    */
-  public void dotPrint(Path fileName, DirectedGraphPrinter<EdgeInfo> printer)
+  public void dotPrint(Path fileName, DirectedGraphPrinter<EI> printer)
     throws IOException {
 
     PrintWriter out =
@@ -946,7 +946,7 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
 
     for (int node = 0; node < getNumberOfVertices(); ++node) {
       if (isVertex(node) && getOutEdges(node) != null) {
-        for (Edge<EdgeInfo> edge : getOutEdges(node)) {
+        for (Edge<EI> edge : getOutEdges(node)) {
           printer.dotPrintEdge(out, edge);
         }
       }
@@ -963,13 +963,13 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    * @throws <code>IOException</code> if an error ccurs when writing the file
    */
   public void dotPrint(Path fileName) throws IOException {
-    dotPrint(fileName, new SimplePrinter<EdgeInfo>(this));
+    dotPrint(fileName, new SimplePrinter<EI>(this));
   }
 
   /** Convert the graph into graphviz format and create a PNG graphic file
    *  out of that representation using the dot program.
    */
-  public void printGraph(String name, DirectedGraphPrinter<EdgeInfo> printer) {
+  public void printGraph(String name, DirectedGraphPrinter<EI> printer) {
     try {
       Path filePath = new File("/tmp/" + name).toPath();
       dotPrint(filePath, printer);
@@ -1022,14 +1022,14 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
    *
    *  This may save a lot of memory, but it needs careful thinking.
    */
-  public DirectedGraph<EdgeInfo> converseLazy() {
-    DirectedGraph<EdgeInfo> result =
-        new DirectedGraph<EdgeInfo>(getNumberOfVertices());
-    for (EdgeContainer<EdgeInfo> out : _outEdges) {
+  public DiGraph<EI> converseLazy() {
+    DiGraph<EI> result =
+        new DiGraph<EI>(getNumberOfVertices());
+    for (EdgeContainer<EI> out : _outEdges) {
       if (out != null) {
-        for (Edge<EdgeInfo> edge : out) {
+        for (Edge<EI> edge : out) {
           int newSource = edge.getTarget();
-          EdgeContainer<EdgeInfo> newOut = result._outEdges.get(newSource);
+          EdgeContainer<EI> newOut = result._outEdges.get(newSource);
           if (newOut == null) {
             newOut = newEdgeList();
             result._outEdges.set(newSource, newOut);
@@ -1047,22 +1047,22 @@ public class DirectedGraph<EdgeInfo> implements AbstractGraph<EdgeInfo> {
   public List<Integer> topoSort(int start) throws CyclicGraphException {
     try {
       final List<Integer> result = new LinkedList<Integer>();
-      dfs(start, new GraphVisitorAdapter<EdgeInfo>() {
+      dfs(start, new GraphVisitorAdapter<EI>() {
         private BitSet active = new BitSet();
 
         @Override
-        public void discoverVertex(int v, DirectedGraph<EdgeInfo> g) {
+        public void discoverVertex(int v, DiGraph<EI> g) {
           active.set(v);
         }
 
         @Override
-        public void finishVertex(int v, DirectedGraph<EdgeInfo> g) {
+        public void finishVertex(int v, DiGraph<EI> g) {
           active.clear(v);
           result.add(0, v);
         }
 
         @Override
-        public void nonTreeEdge(Edge<EdgeInfo> e, DirectedGraph<EdgeInfo> g) {
+        public void nonTreeEdge(Edge<EI> e, DiGraph<EI> g) {
           if (active.get(e.getTarget()))
             throw new RuntimeException("Cycle");
         }

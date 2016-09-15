@@ -10,21 +10,22 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
- * <code>DirectedGraphTest</code> is a test class for {@link DirectedGraph}.
+ * <code>DirectedGraphTest</code> is a test class for {@link DiGraph}.
  *
  * @author Joerg Steffen, DFKI
  * @version $Id: DirectedGraphTest.java,v 1.1 2005/11/15 10:46:27 steffen Exp $
  */
-public class DirectedGraphTest {
+public class TestDirectedGraph2 {
   // default visibility for examples to be able to use them in other modules
   // in this package
 
   /** Use this example to test your traversal methods, it's the last example
    *  on the first set of slides.
    */
-  static final String exampleGraph =
+  public static final String exampleGraph =
     "shirt --> tie jacket belt\n" +
     "tie --> jacket\n" +
     "belt --> jacket\n" +
@@ -36,7 +37,7 @@ public class DirectedGraphTest {
   /** Use this example to test your traversal methods, it's the last example
    *  on the first set of slides.
    */
-  static final String exampleBfsGraph =
+  public static final String exampleBfsGraph =
     "s --> r w\n" +
     "r --> s v\n" +
     "v --> r\n" +
@@ -96,7 +97,7 @@ public class DirectedGraphTest {
    *  This method has default visibility to be able to use it in other test
    *  modules.
    */
-  public static void readGraph(DirectedGraph<String> result, Reader in)
+  public static void readGraph(DiGraph<String> result, Reader in)
       throws IOException {
     BufferedReader bin = new BufferedReader(in);
 
@@ -142,7 +143,7 @@ public class DirectedGraphTest {
   @Test
   public void testCompact0() throws IOException {
     // read in graph
-    DirectedGraph<String> graph = new DirectedGraph<String>();
+    DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader( exampleBfsGraph));
     graph.printGraph("XXXinit");
     graph.removeVertex(3);
@@ -162,7 +163,7 @@ public class DirectedGraphTest {
   @Test
   public void testCompact1() throws IOException {
     // read in graph
-    DirectedGraph<String> graph = new DirectedGraph<String>();
+    DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader(exampleBfsGraph));
     //graph.printGraph("XXXinit");
     graph.removeVertex(0);
@@ -182,7 +183,7 @@ public class DirectedGraphTest {
   @Test
   public void testCompactStable0() throws IOException {
     // read in graph
-    DirectedGraph<String> graph = new DirectedGraph<String>();
+    DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader( exampleBfsGraph));
     graph.printGraph("XXXinit");
     graph.removeVertex(3);
@@ -202,7 +203,7 @@ public class DirectedGraphTest {
   @Test
   public void testCompactStable1() throws IOException {
     // read in graph
-    DirectedGraph<String> graph = new DirectedGraph<String>();
+    DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader(exampleBfsGraph));
     //graph.printGraph("XXXinit");
     graph.removeVertex(0);

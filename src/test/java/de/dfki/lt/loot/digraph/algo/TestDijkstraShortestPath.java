@@ -13,13 +13,14 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 import de.dfki.lt.loot.digraph.BinaryPredicate;
-import de.dfki.lt.loot.digraph.DirectedGraph;
+import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 import de.dfki.lt.loot.digraph.weighted.EdgeWeight;
 import de.dfki.lt.loot.digraph.weighted.IntMonoid;
 import de.dfki.lt.loot.digraph.weighted.WeightInfo;
+import static org.junit.Assert.assertEquals;
 
 
 class NameWeight implements WeightInfo<Integer> {
@@ -41,12 +42,12 @@ class NameWeight implements WeightInfo<Integer> {
 
 /**
  * <code>DirectedGraphTest</code> is a test class for
- * {@link DirectedGraph}.
+ * {@link DiGraph}.
  *
  * @author Joerg Steffen, DFKI
  * @version $Id: DirectedGraphTest.java,v 1.1 2005/11/15 10:46:27 steffen Exp $
  */
-public class DijkstraShortestPathTest {
+public class TestDijkstraShortestPath {
 
   /** Use this example to test your traversal methods, it's the last example
    *  on the first set of slides.
@@ -71,7 +72,7 @@ public class DijkstraShortestPathTest {
   @Test
   public void testDijkstra() throws IOException {
 
-    DirectedGraph<NameWeight> graph;
+    DiGraph<NameWeight> graph;
 
     // read in graph
     graph = readGraph(new StringReader(exampleGraph));
@@ -129,11 +130,11 @@ public class DijkstraShortestPathTest {
   /**
    * create a graph from a readable specification (including edge weights)
    */
-  static DirectedGraph<NameWeight> readGraph(Reader in)
+  static DiGraph<NameWeight> readGraph(Reader in)
     throws IOException {
     BufferedReader bin = new BufferedReader(in);
 
-    DirectedGraph<NameWeight> result = new DirectedGraph<NameWeight>();
+    DiGraph<NameWeight> result = new DiGraph<NameWeight>();
     EqualsPredicate<String> eqPred = new EqualsPredicate<String>();
 
     VertexPropertyMap<String> names = new VertexListPropertyMap<String>(result);

@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.dfki.lt.loot.digraph.AbstractGraph;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.VertexBooleanPropertyMap;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
@@ -15,6 +14,7 @@ import de.dfki.lt.loot.digraph.weighted.OrderedMonoid;
 import de.dfki.lt.loot.digraph.weighted.WeightFunction;
 import de.dfki.lt.loot.jada.FibonacciHeapBase;
 import de.dfki.lt.loot.jada.FibonacciHeapBase.HeapNode;
+import de.dfki.lt.loot.digraph.Graph;
 
 public class DijkstraShortestPath<EdgeInfo, T> {
 
@@ -27,7 +27,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
   // shortest path in case there is one found
   private VertexPropertyMap<Edge<EdgeInfo>> predecessor;
 
-  private Integer shortestPath(AbstractGraph<EdgeInfo> g, int startVertex,
+  private Integer shortestPath(Graph<EdgeInfo> g, int startVertex,
       final OrderedMonoid<T> ops, final WeightFunction<EdgeInfo, T> getWeight,
       VertexBooleanPropertyMap endVertices) {
     predecessor = new VertexListPropertyMap<Edge<EdgeInfo>>(g);
@@ -89,7 +89,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
   }
 
 
-  public List<Edge<EdgeInfo>> shortestPath(AbstractGraph<EdgeInfo> g,
+  public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, int endVertex, OrderedMonoid<T> weightOps,
       WeightFunction<EdgeInfo, T> getWeight) {
     List<Integer> end = new ArrayList<Integer>(1);
@@ -97,14 +97,14 @@ public class DijkstraShortestPath<EdgeInfo, T> {
     return shortestPath(g, startVertex, end, weightOps, getWeight);
   }
 
-  public List<Edge<EdgeInfo>> shortestPath(AbstractGraph<EdgeInfo> g,
+  public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, OrderedMonoid<T> weightOps,
       WeightFunction<EdgeInfo, T> getWeight) {
     List<Integer> end = Collections.emptyList();
     return shortestPath(g, startVertex, end, weightOps, getWeight);
   }
 
-  public List<Edge<EdgeInfo>> shortestPath(AbstractGraph<EdgeInfo> g,
+  public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, List<Integer> endVertices,
       OrderedMonoid<T> weightOps, WeightFunction<EdgeInfo, T> getWeight) {
     VertexBooleanPropertyMap end = new VertexBooleanPropertyMap(g);

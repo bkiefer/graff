@@ -11,11 +11,11 @@ import java.io.PrintWriter;
  */
 public class SimplePrinter<T> implements DirectedGraphPrinter<T> {
   @SuppressWarnings("unused")
-  private DirectedGraph<T> _graph;
+  private DiGraph<T> _graph;
   private VertexPropertyMap<String> _nodeNames;
 
   @SuppressWarnings("unchecked")
-  public SimplePrinter(DirectedGraph<T> graph) {
+  public SimplePrinter(DiGraph<T> graph) {
     _graph = graph;
     _nodeNames = (VertexPropertyMap<String>) graph.getPropertyMap("names");
   }

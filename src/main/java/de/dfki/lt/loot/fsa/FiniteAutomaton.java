@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.dfki.lt.loot.digraph.DirectedGraph;
+import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.DirectedGraphPrinter;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.GraphVisitorAdapter;
@@ -25,7 +25,7 @@ import de.dfki.lt.loot.digraph.VertexListPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 import de.dfki.lt.loot.fsa.algo.Determinization;
 
-public class FiniteAutomaton<EdgeInfo> extends DirectedGraph<EdgeInfo>
+public class FiniteAutomaton<EdgeInfo> extends DiGraph<EdgeInfo>
 implements AbstractAutomaton<EdgeInfo> {
 
   /** A mini sub automaton in this automaton */
@@ -322,17 +322,17 @@ implements AbstractAutomaton<EdgeInfo> {
     final BitSet visited = new BitSet();
     dfs(_initialState, new GraphVisitorAdapter<EdgeInfo>() {
       @Override
-      public void discoverVertex(int v, DirectedGraph<EdgeInfo> g){
+      public void discoverVertex(int v, DiGraph<EdgeInfo> g){
         visited.set(v);
       }
     });
     deleteIneffective(visited);
-    DirectedGraph<EdgeInfo> converse = converseLazy();
+    DiGraph<EdgeInfo> converse = converseLazy();
     visited.clear();
     for (int fin : getFinalStates()) {
       converse.dfsConverse(fin, new GraphVisitorAdapter<EdgeInfo>() {
         @Override
-        public void discoverVertex(int v, DirectedGraph<EdgeInfo> g){
+        public void discoverVertex(int v, DiGraph<EdgeInfo> g){
           visited.set(v);
         }
       });
@@ -372,7 +372,7 @@ implements AbstractAutomaton<EdgeInfo> {
     public String defaultEdgeAttributes = null;
 
     @SuppressWarnings("unchecked")
-    public FsaPrinter(DirectedGraph<EdgeInfo> graph) {
+    public FsaPrinter(DiGraph<EdgeInfo> graph) {
       _nodeNames = (VertexPropertyMap<String>) graph.getPropertyMap("names");
     }
 
@@ -1146,7 +1146,7 @@ implements AbstractAutomaton<EdgeInfo> {
      * {@inheritDoc}
      */
     @Override
-    public void discoverVertex(int v, DirectedGraph<EdgeInfo> g) {
+    public void discoverVertex(int v, DiGraph<EdgeInfo> g) {
 
       if (FiniteAutomaton.this.isFinalState(v)) {
         this.collectedFinalStates.set(v);

@@ -1,5 +1,9 @@
-package de.dfki.lt.loot.digraph;
+package de.dfki.lt.loot.digraph.algo;
 
+import de.dfki.lt.loot.digraph.DiGraph;
+import de.dfki.lt.loot.digraph.TestDirectedGraph;
+import de.dfki.lt.loot.digraph.VertexPropertyMap;
+import de.dfki.lt.loot.digraph.algo.TopoOrderVisitor;
 import static junit.framework.Assert.assertEquals;
 
 import java.io.IOException;
@@ -21,7 +25,7 @@ public class TestTopoOrderVisitor {
   /**
    * Contains the graph on which the tests run.
    */
-  private static DirectedGraph<String> graph;
+  private static DiGraph<String> graph;
 
 
   /**
@@ -43,7 +47,7 @@ public class TestTopoOrderVisitor {
           + "pants --> belt shoes\n"
           + "socks --> shoes\n";
 
-    graph = new DirectedGraph<String>();
+    graph = new DiGraph<String>();
     TestDirectedGraph.readGraph(graph, new StringReader(graphString));
   }
 
@@ -70,6 +74,31 @@ public class TestTopoOrderVisitor {
     }
     assertEquals(
       "socks undershorts pants shoes watch shirt belt tie jacket",
+      result.toString().trim());
+  }
+
+  /**
+   * Tests the {@link TopoOrderVisitor}.
+   */
+  @Test
+  public void testInverse() {
+
+    //System.out.println(graph);
+    // calculate topological order
+    TopoOrderVisitor<String> topoVisitor = new TopoOrderVisitor<>(true);
+    graph.dfs(topoVisitor);
+    @SuppressWarnings("unchecked")
+    VertexPropertyMap<String> names =
+        (VertexPropertyMap<String>)graph.getPropertyMap("names");
+    Iterator<Integer> topoReverseIt = topoVisitor.getSortedVertices().iterator();
+    StringBuilder result = new StringBuilder();
+    while (topoReverseIt.hasNext()) {
+      int v = topoReverseIt.next();
+      //System.out.println(names.get(v));
+      result.append(String.format("%s ", names.get(v)));
+    }
+    assertEquals(
+      "jacket tie belt shirt watch shoes pants undershorts socks",
       result.toString().trim());
   }
 }

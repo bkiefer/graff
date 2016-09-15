@@ -7,11 +7,11 @@ import java.util.List;
 public class VertexListPropertyMap<ValueType>
   implements VertexPropertyMap<ValueType> {
 
-  private AbstractGraph<?> _graph;
+  private Graph<?> _graph;
 
   private ArrayList<ValueType> _map;
 
-  public VertexListPropertyMap(AbstractGraph<?> graph) {
+  public VertexListPropertyMap(Graph<?> graph) {
     _map = new ArrayList<ValueType>();
     _graph = graph;
   }

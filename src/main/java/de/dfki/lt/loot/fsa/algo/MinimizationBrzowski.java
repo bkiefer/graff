@@ -4,9 +4,9 @@ import java.util.BitSet;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-import de.dfki.lt.loot.digraph.AbstractGraph;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.fsa.AbstractAutomaton;
+import de.dfki.lt.loot.digraph.Graph;
 
 public class MinimizationBrzowski {
 
@@ -22,7 +22,7 @@ public class MinimizationBrzowski {
    * <code>false</code> at matrix[i][j] (if i > j; vice versa otherwise)
    */
   private static <EdgeInfo> void propagate(AbstractAutomaton<EdgeInfo> graph,
-    AbstractGraph<EdgeInfo> converse,
+    Graph<EdgeInfo> converse,
     Comparator<EdgeInfo> comp, int i, int j, BitSet notEquivalent) {
 
     int nodesLength = graph.getNumberOfVertices();
@@ -116,7 +116,7 @@ public class MinimizationBrzowski {
 
     int nodesLength = graph.getNumberOfVertices();
     BitSet notEquivalent = new BitSet(nodesLength * nodesLength);
-    AbstractGraph<EdgeInfo> converse = graph.converseLazy();
+    Graph<EdgeInfo> converse = graph.converseLazy();
 
     // check pairs of nodes for equivalence: they are not equivalent if:
     // - one of them is a final node and the other is not

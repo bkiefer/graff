@@ -7,11 +7,11 @@ import java.util.List;
 
 public class VertexBooleanPropertyMap implements VertexPropertyMap<Boolean> {
 
-  private AbstractGraph<?> _graph;
+  private Graph<?> _graph;
 
   private BitSet _map;
 
-  public VertexBooleanPropertyMap(AbstractGraph<?> g) {
+  public VertexBooleanPropertyMap(Graph<?> g) {
     _map = new BitSet();
     _graph = g;
   }
@@ -28,6 +28,16 @@ public class VertexBooleanPropertyMap implements VertexPropertyMap<Boolean> {
   public Boolean get(int vertex) {
     assert (_graph.isVertex(vertex));
     return _map.get(vertex);
+  }
+
+  public void set(int vertex) {
+    assert (_graph.isVertex(vertex));
+    _map.set(vertex);
+  }
+
+  public void clear(int vertex) {
+    assert (_graph.isVertex(vertex));
+    _map.clear(vertex);
   }
 
   public void remove(int vertex) {

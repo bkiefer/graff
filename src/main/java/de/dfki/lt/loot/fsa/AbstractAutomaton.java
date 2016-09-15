@@ -2,9 +2,9 @@ package de.dfki.lt.loot.fsa;
 
 import java.util.Collection;
 
-import de.dfki.lt.loot.digraph.AbstractGraph;
+import de.dfki.lt.loot.digraph.Graph;
 
-public interface AbstractAutomaton<EdgeInfo> extends AbstractGraph<EdgeInfo> {
+public interface AbstractAutomaton<EdgeInfo> extends Graph<EdgeInfo> {
 
   // Automaton specific methods
 

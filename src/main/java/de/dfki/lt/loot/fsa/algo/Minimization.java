@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import de.dfki.lt.loot.digraph.AbstractGraph;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.fsa.AbstractAutomaton;
+import de.dfki.lt.loot.digraph.Graph;
 
 public class Minimization {
 
@@ -140,7 +140,7 @@ How to find out if p is splittable by W, a:
       Wait[addToL].add(c);
     }
 
-    AbstractGraph<EdgeInfo> converseGraph = graph.converseLazy();
+    Graph<EdgeInfo> converseGraph = graph.converseLazy();
     BitSet D = new BitSet();
     do {
       // get next from Wait:

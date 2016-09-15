@@ -1,5 +1,7 @@
-package de.dfki.lt.loot.digraph;
+package de.dfki.lt.loot.digraph.algo;
 
+import de.dfki.lt.loot.digraph.DiGraph;
+import de.dfki.lt.loot.digraph.GraphVisitorAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +21,24 @@ public class TopoOrderVisitor<EdgeInfo> extends GraphVisitorAdapter<EdgeInfo> {
   /**
    * Here we collect the sorted vertices.
    */
-  private List<Integer> sortedVertices;
+  private List<Integer> _sortedVertices;
+
+  /** collect the vertices in inverse topo order if true. */
+  private boolean _inverse;
 
   /**
    * Creates a new instance of {@link TopoOrderVisitor}.
    */
   public TopoOrderVisitor() {
-    this.sortedVertices = new ArrayList<>();
+    this(false);
+  }
+
+  /**
+   * Creates a new instance of {@link TopoOrderVisitor}.
+   */
+  public TopoOrderVisitor(boolean inverse) {
+    _inverse = inverse;
+    _sortedVertices = new ArrayList<>();
   }
 
 
@@ -35,7 +48,7 @@ public class TopoOrderVisitor<EdgeInfo> extends GraphVisitorAdapter<EdgeInfo> {
    * @return the list of topological sorted vertices
    */
   public List<Integer> getSortedVertices() {
-    return this.sortedVertices;
+    return _sortedVertices;
   }
 
 
@@ -43,9 +56,12 @@ public class TopoOrderVisitor<EdgeInfo> extends GraphVisitorAdapter<EdgeInfo> {
    * {@inheritDoc}
    */
   @Override
-  public void finishVertex(int v, DirectedGraph<EdgeInfo> g) {
+  public void finishVertex(int v, DiGraph<EdgeInfo> g) {
 
     // add a finished vertex at the start of the list
-    this.sortedVertices.add(0, v);
+    if (_inverse)
+      _sortedVertices.add(v);
+    else
+      _sortedVertices.add(0, v);
   }
 }

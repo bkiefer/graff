@@ -4,8 +4,10 @@ import java.util.Comparator;
 
 /** A DirectedGraph interface containing all methods currently needed for
  *  abstract algorithms.
+ *
+ *  EI is short for EdgeInfo, the type that is attached to every edge.
  */
-public interface AbstractGraph<EdgeInfo> {
+public interface Graph<EI> {
 
   /** This creates a new vertex. It either takes an available deleted vertex
    * or creates a completely new one.
@@ -26,7 +28,7 @@ public interface AbstractGraph<EdgeInfo> {
   public abstract int getNumberOfVertices();
 
   /** return the edges emerging from vertex, may not return null */
-  public abstract Iterable<Edge<EdgeInfo>> getOutEdges(int vertex);
+  public abstract Iterable<Edge<EI>> getOutEdges(int vertex);
 
   /** return the edges ending in this vertex, may not return null */
   // public abstract Iterable<Edge<EdgeInfo>> getInEdges(int vertex);
@@ -45,7 +47,7 @@ public interface AbstractGraph<EdgeInfo> {
   public abstract void cleanupEdges();
 
 
-  public abstract Edge<EdgeInfo> newEdge(EdgeInfo info, int from, int to);
+  public abstract Edge<EI> newEdge(EI info, int from, int to);
 
   /**
    * This returns the first edges emerging from vertex where the edge info is
@@ -56,8 +58,8 @@ public interface AbstractGraph<EdgeInfo> {
    * @param binPred a {@link BinaryPredicate} used to compare the edge infos
    * @return an {@link Edge}s that matches or <code>null</code>
    */
-  public abstract Edge<EdgeInfo> findEdge(int sourceVertex, EdgeInfo info,
-      Comparator<EdgeInfo> comp);
+  public abstract Edge<EI> findEdge(int sourceVertex, EI info,
+      Comparator<EI> comp);
 
   /**
    * This returns all edges emerging from vertex where the edge info is
@@ -68,19 +70,19 @@ public interface AbstractGraph<EdgeInfo> {
    * @param binPred a {@link BinaryPredicate} used to compare the edge infos
    * @return a <code>List</code> of {@link Edge}s with matching edges
    */
-  public abstract Iterable<Edge<EdgeInfo>> findEdges(int sourceVertex,
-      EdgeInfo info, Comparator<EdgeInfo> comp);
+  public abstract Iterable<Edge<EI>> findEdges(int sourceVertex,
+      EI info, Comparator<EI> comp);
 
   /** This changes the to vertex of this edge to the given vertex.
    *
    * @param anEndVertex the new end vertex
    */
-  public abstract void changeEndVertex(Edge<EdgeInfo> edge, int newTarget);
+  public abstract void changeEndVertex(Edge<EI> edge, int newTarget);
 
   /** Return the lazy converse graph of this graph, i.e., one where all edges
    * are put into the target outEdges instead of the source outEdges.
    */
-  public abstract AbstractGraph<EdgeInfo> converseLazy();
+  public abstract Graph<EI> converseLazy();
 
 
 }

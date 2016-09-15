@@ -10,6 +10,9 @@ import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link TestDirectedBiGraph} is a test class for {@link DirectedGraph}.
@@ -198,8 +201,8 @@ public class TestDirectedBiGraph {
   public void testCompact0() throws IOException {
     // read in graph
     DirectedBiGraph<String> graph = new DirectedBiGraph<String>();
-    DirectedGraphTest.readGraph(graph,
-        new StringReader( DirectedGraphTest.exampleBfsGraph));
+    TestDirectedGraph2.readGraph(graph,
+        new StringReader( TestDirectedGraph2.exampleBfsGraph));
     graph.printGraph("XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
@@ -219,8 +222,8 @@ public class TestDirectedBiGraph {
   public void testCompact1() throws IOException {
     // read in graph
     DirectedBiGraph<String> graph = new DirectedBiGraph<String>();
-    DirectedGraphTest.readGraph(graph,
-        new StringReader(DirectedGraphTest.exampleBfsGraph));
+    TestDirectedGraph2.readGraph(graph,
+        new StringReader(TestDirectedGraph2.exampleBfsGraph));
     //graph.printGraph("XXXinit");
     graph.removeVertex(0);
     graph.removeVertex(7);

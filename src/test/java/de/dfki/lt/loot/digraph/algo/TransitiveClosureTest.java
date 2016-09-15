@@ -13,11 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.dfki.lt.loot.digraph.CyclicGraphException;
-import de.dfki.lt.loot.digraph.DirectedGraph;
-import de.dfki.lt.loot.digraph.DirectedGraphTest;
+import de.dfki.lt.loot.digraph.DiGraph;
+import de.dfki.lt.loot.digraph.TestDirectedGraph2;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TransitiveClosureTest {
   /** Use this example to test your traversal methods, it's the last example
@@ -47,17 +49,18 @@ public class TransitiveClosureTest {
     "x --> z\n" +
     "q --> x\n";
 
-  DirectedGraph<String> graphCyclic, graphAcyclic;
+  DiGraph<String> graphCyclic;
+  DiGraph<String> graphAcyclic;
 
   @Before
   public void setUp() {
     // read in graph
     try {
-      graphCyclic = new DirectedGraph<String>();
-      DirectedGraphTest.readGraph(graphCyclic,
+      graphCyclic = new DiGraph<String>();
+      TestDirectedGraph2.readGraph(graphCyclic,
           new StringReader(exampleGraphCyclic));
-      graphAcyclic =  new DirectedGraph<String>();
-      DirectedGraphTest.readGraph(graphAcyclic,
+      graphAcyclic =  new DiGraph<String>();
+      TestDirectedGraph2.readGraph(graphAcyclic,
           new StringReader(exampleGraphACyclic));
     } catch (IOException e) {
       e.printStackTrace();
@@ -78,7 +81,7 @@ public class TransitiveClosureTest {
   @Test
   public void testReduction() {
     //graphCyclic.printGraph("input");
-    DirectedGraph<String> red = TransitiveClosure.acyclicReduction(graphCyclic);
+    DiGraph<String> red = TransitiveClosure.acyclicReduction(graphCyclic);
     VertexPropertyMap<String> redNames = new VertexListPropertyMap<String>(red);
     @SuppressWarnings("unchecked")
     VertexPropertyMap<List<Integer>> componentsMap =
@@ -131,7 +134,7 @@ public class TransitiveClosureTest {
   @Test
   public void testAcyclicReduction() {
     //graphAcyclic.printGraph("input_acyclic");
-    DirectedGraph<String> red =
+    DiGraph<String> red =
         TransitiveClosure.acyclicReduction(graphAcyclic);
     assertEquals(graphAcyclic.getNumberOfVertices(),
         red.getNumberOfVertices());
