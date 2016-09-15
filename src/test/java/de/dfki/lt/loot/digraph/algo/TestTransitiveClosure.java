@@ -1,12 +1,10 @@
 package de.dfki.lt.loot.digraph.algo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static de.dfki.lt.loot.digraph.Utils.*;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -14,54 +12,23 @@ import org.junit.Test;
 
 import de.dfki.lt.loot.digraph.CyclicGraphException;
 import de.dfki.lt.loot.digraph.DiGraph;
-import de.dfki.lt.loot.digraph.TestDirectedGraph2;
 import de.dfki.lt.loot.digraph.Edge;
-import de.dfki.lt.loot.digraph.VertexListPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-public class TransitiveClosureTest {
+public class TestTransitiveClosure {
   /** Use this example to test your traversal methods, it's the last example
    *  on the first set of slides.
    */
-  static final String exampleGraphCyclic =
-    "s --> w z\n" +
-    "z --> w y\n" +
-    "v --> w s\n" +
-    "w --> x q\n" +
-    "t --> u v\n" +
-    "u --> t v\n" +
-    "x --> z\n" +
-    "q --> x\n" +
-    "y --> x\n";
 
-  /** Use this example to test your traversal methods, it's the last example
-   *  on the first set of slides.
-   */
-  static final String exampleGraphACyclic =
-    "s --> w z\n" +
-    "z --> y\n" +
-    "v --> w s\n" +
-    "w --> x q\n" +
-    "t --> u v\n" +
-    "u --> v\n" +
-    "x --> z\n" +
-    "q --> x\n";
-
-  DiGraph<String> graphCyclic;
-  DiGraph<String> graphAcyclic;
+  public DiGraph<String> graphAcyclic;
+  public DiGraph<String> graphCyclic;
 
   @Before
   public void setUp() {
     // read in graph
     try {
-      graphCyclic = new DiGraph<String>();
-      TestDirectedGraph2.readGraph(graphCyclic,
-          new StringReader(exampleGraphCyclic));
-      graphAcyclic =  new DiGraph<String>();
-      TestDirectedGraph2.readGraph(graphAcyclic,
-          new StringReader(exampleGraphACyclic));
+      graphCyclic = readGraph(exampleGraphCyclic);
+      graphAcyclic = readGraph(exampleGraphAcyclic);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -76,29 +43,6 @@ public class TransitiveClosureTest {
   public void testCycleTest1() throws CyclicGraphException {
     assertEquals(graphAcyclic.getNumberOfVertices(),
         graphAcyclic.topoSort(7).size());
-  }
-
-  @Test
-  public void testReduction() {
-    //graphCyclic.printGraph("input");
-    DiGraph<String> red = TransitiveClosure.acyclicReduction(graphCyclic);
-    VertexPropertyMap<String> redNames = new VertexListPropertyMap<String>(red);
-    @SuppressWarnings("unchecked")
-    VertexPropertyMap<List<Integer>> componentsMap =
-        (VertexPropertyMap<List<Integer>>) red.getPropertyMap("originalSCCs");
-    for (int v = 0; v < red.getNumberOfVertices(); ++v) {
-      StringBuilder sb = new StringBuilder();
-      sb.append('{'); boolean first = true;
-      for (int origV : componentsMap.get(v)) {
-        if (! first) sb.append(',');
-        else first = false;
-        sb.append(Integer.toString(origV));
-      }
-      sb.append('}');
-      redNames.put(v, sb.toString());
-    }
-    red.register("names", redNames);
-    //red.printGraph("red.dot");
   }
 
   /*
@@ -130,32 +74,6 @@ public class TransitiveClosureTest {
     graphCyclic.printGraph("d_red.dot");
   }
   */
-
-  @Test
-  public void testAcyclicReduction() {
-    //graphAcyclic.printGraph("input_acyclic");
-    DiGraph<String> red =
-        TransitiveClosure.acyclicReduction(graphAcyclic);
-    assertEquals(graphAcyclic.getNumberOfVertices(),
-        red.getNumberOfVertices());
-    VertexPropertyMap<String> redNames = new VertexListPropertyMap<String>(red);
-    @SuppressWarnings("unchecked")
-    VertexPropertyMap<List<Integer>> componentsMap =
-        (VertexPropertyMap<List<Integer>>) red.getPropertyMap("originalSCCs");
-    for (int v = 0; v < red.getNumberOfVertices(); ++v) {
-      StringBuilder sb = new StringBuilder();
-      sb.append('{'); boolean first = true;
-      for (int origV : componentsMap.get(v)) {
-        if (! first) sb.append(',');
-        else first = false;
-        sb.append(Integer.toString(origV));
-      }
-      sb.append('}');
-      redNames.put(v, sb.toString());
-    }
-    red.register("names", redNames);
-    //red.printGraph("a_red.dot");
-  }
 
   @Test
   public void testAcyclicClosure() {

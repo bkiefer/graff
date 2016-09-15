@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-public class PairTest {
+public class TestPair {
   @Test
   public void create() {
     Pair<String, String> s = new Pair<String, String>("a", "b");

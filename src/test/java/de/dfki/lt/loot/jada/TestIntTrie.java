@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class IntTrieTest {
+public class TestIntTrie {
   @Test
   public void add1() {
     int[] in = { 1, 2, 3};

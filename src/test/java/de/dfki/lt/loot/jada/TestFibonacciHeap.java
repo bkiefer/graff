@@ -17,8 +17,12 @@ import java.util.Vector;
 import org.junit.Test;
 
 import de.dfki.lt.loot.jada.FibonacciHeap.HeapNode;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-public class FibonacciHeapTest {
+public class TestFibonacciHeap {
 
   @Test
   public void create() {

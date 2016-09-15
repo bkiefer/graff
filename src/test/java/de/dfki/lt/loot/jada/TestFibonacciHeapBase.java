@@ -10,8 +10,11 @@ import java.util.Vector;
 import org.junit.Test;
 
 import de.dfki.lt.loot.jada.FibonacciHeapBase.HeapNode;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-public class FibonacciHeapBaseTest {
+public class TestFibonacciHeapBase {
 
   private class MyData {
     public MyData(String ss, int ii) { s = ss; i = ii; }
