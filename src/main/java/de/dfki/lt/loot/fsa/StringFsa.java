@@ -118,9 +118,7 @@ public class StringFsa extends FiniteAutomaton<String> {
       out.println(this.getInitialState());
 
       // for each state, write its outgoing edges
-      VertexIterator verticesIterator = this.vertices();
-      while (verticesIterator.hasNext()) {
-        int vertex = verticesIterator.next();
+      for (int vertex : this) {
         for (Edge<String> oneEdge : this.getOutEdges(vertex)) {
           String edgeInfo = oneEdge.getInfo();
           if (null == edgeInfo) {

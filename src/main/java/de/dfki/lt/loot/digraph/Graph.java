@@ -7,7 +7,7 @@ import java.util.Comparator;
  *
  *  EI is short for EdgeInfo, the type that is attached to every edge.
  */
-public interface Graph<EI> {
+public interface Graph<EI> extends Iterable<Integer> {
 
   /** This creates a new vertex. It either takes an available deleted vertex
    * or creates a completely new one.

@@ -39,7 +39,7 @@ public class TransitiveReduction {
 
     VertexBooleanPropertyMap reached = new VertexBooleanPropertyMap(graph);
 
-    for (VertexIterator vit = graph.vertices(); vit.hasNext();) {
+    for (VertexIterator vit = graph.iterator(); vit.hasNext();) {
       int v = vit.next();
       List<Integer> newList = new ArrayList<>();
       newList.add(v);

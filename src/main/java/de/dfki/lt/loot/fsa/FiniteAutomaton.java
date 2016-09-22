@@ -749,14 +749,12 @@ implements AbstractAutomaton<EdgeInfo> {
     VertexListPropertyMap<Integer> succ2here =
         new VertexListPropertyMap<Integer>(successor);
     // add all vertices and edges of the successor
-    for (VertexIterator it = successor.vertices(); it.hasNext();) {
-      int v = it.next();
+    for (int v : this) {
       if (successor.isVertex(v)) {
         succ2here.put(v, newVertex());
       }
     }
-    for (VertexIterator it = successor.vertices(); it.hasNext();) {
-      int v = it.next();
+    for (int v : this) {
       if (successor.isVertex(v)) {
         int from = succ2here.get(v);
         for (Edge<EdgeInfo> e : successor.getOutEdges(v)) {
@@ -964,8 +962,7 @@ implements AbstractAutomaton<EdgeInfo> {
     // complement creation:
     // all final states become non-final states;
     // all non-final states become final states
-    for (VertexIterator it = complement.vertices(); it.hasNext();) {
-      int v = it.next();
+    for (int v : complement) {
       if (complement.isFinalState(v)) {
         complement.setNonFinalState(v);
       }
@@ -994,9 +991,7 @@ implements AbstractAutomaton<EdgeInfo> {
     BitSet newFinalStates = new BitSet();
 
     // add states
-    VertexIterator it = aut.vertices();
-    while (it.hasNext()) {
-      int state = it.next();
+    for (int state : aut) {
       int newState = this.newVertex();
       statesMap.put(state, newState);
       if (aut.isFinalState(state)) {
@@ -1004,9 +999,7 @@ implements AbstractAutomaton<EdgeInfo> {
       }
     }
     // add edges
-    it = aut.vertices();
-    while (it.hasNext()) {
-      int state = it.next();
+    for (int state : aut) {
       int newSourceState = statesMap.get(state);
       for (Edge<EdgeInfo> oneOutEdge : aut.getOutEdges(state)) {
         int newTargetState = statesMap.get(oneOutEdge.getTarget());

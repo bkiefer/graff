@@ -12,6 +12,7 @@ import org.junit.Test;
 import de.dfki.lt.loot.fsa.FiniteAutomaton.SubAutomaton;
 import de.dfki.lt.loot.fsa.algo.Determinization;
 import de.dfki.lt.loot.fsa.algo.Minimization;
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * {@link TestStringFsa} is a test class for {@link StringFsa}.

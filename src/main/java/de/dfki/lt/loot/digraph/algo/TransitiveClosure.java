@@ -183,16 +183,10 @@ public class TransitiveClosure {
     //    for (int j = 0; j < n; j++)
     //      R[i,j] = R[i,j] || (R[i,k] && R[k,j]);
 
-    for(DiGraph<EdgeInfo>.VertexIterator it_k = g.vertices();
-        it_k.hasNext();) {
-      int k = it_k.next();
+    for(int k : g) {
       // if (! g.hasEdge(vi, vi)) g.newEdge(null, vi, vi);
-      for(DiGraph<EdgeInfo>.VertexIterator it_i = g.vertices();
-          it_i.hasNext();) {
-        int i = it_i.next();
-        for (DiGraph<EdgeInfo>.VertexIterator it_j = g.vertices();
-            it_j.hasNext();) {
-          int j = it_j.next();
+      for(int i : g) {
+        for (int j : g){
           if (! g.hasEdge(i, j))
             if (g.hasEdge(i, k) && g.hasEdge(k, j))
               g.newEdge(null, i, j);
@@ -200,5 +194,5 @@ public class TransitiveClosure {
       }
     }
   }
-
+  
 }

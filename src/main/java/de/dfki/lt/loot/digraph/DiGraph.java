@@ -22,7 +22,9 @@ import java.util.Queue;
 
 /**
  * <code>DirectedGraph</code> represents a directed graph. Vertices and edges
- * are managed in lists.
+ * are managed in lists. This class only stores outgoing edges. If efficient
+ * access to the list of incoming edges is required, either a DirectedBiGraph
+ * should be used, or the inverse graph should be computed.
  *
  * @author Bernd Kiefer, DFKI
  * @author Joerg Steffen, DFKI
@@ -316,7 +318,7 @@ public class DiGraph<EI> implements Graph<EI> {
     return vertex < _outEdges.size() && ! isDeletedVertex(vertex) ;
   }
 
-  public class VertexIterator {
+  public class VertexIterator implements Iterator<Integer> {
     private int _current;
 
     VertexIterator() {
@@ -332,7 +334,7 @@ public class DiGraph<EI> implements Graph<EI> {
     }
 
     /** return the next valid vertex */
-    public int next() {
+    public Integer next() {
       int result = _current;
       ++_current;
       while (hasNext() && isDeletedVertex(_current)) {
@@ -343,7 +345,7 @@ public class DiGraph<EI> implements Graph<EI> {
   }
 
   /** This allows to iterate over all vertices of this graph */
-  public VertexIterator vertices() {
+  public VertexIterator iterator() {
     return new VertexIterator();
   }
 
@@ -741,7 +743,7 @@ public class DiGraph<EI> implements Graph<EI> {
   public String toString(VertexPropertyMap<? extends Object> propMap) {
     StringBuilder strRep = new StringBuilder();
 
-    for ( VertexIterator it = vertices(); it.hasNext();) {
+    for ( VertexIterator it = iterator(); it.hasNext();) {
       strRep.append(toString(it.next(), propMap));
     }
 
@@ -760,12 +762,8 @@ public class DiGraph<EI> implements Graph<EI> {
 
   public String asMatrix() {
     StringBuilder sb = new StringBuilder();
-    for(DiGraph<EI>.VertexIterator it = vertices();
-        it.hasNext();) {
-      int vi = it.next();
-      for(DiGraph<EI>.VertexIterator jt = vertices();
-          jt.hasNext();) {
-        int vj = jt.next();
+    for(int vi : this) {
+      for(int vj : this) {
         sb.append(hasEdge(vi, vj) ? '*' : '.');
       }
       sb.append('\n');
