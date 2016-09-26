@@ -318,7 +318,7 @@ public class DiGraph<EI> implements Graph<EI> {
     return vertex < _outEdges.size() && ! isDeletedVertex(vertex) ;
   }
 
-  public class VertexIterator implements Iterator<Integer> {
+  private class VertexIterator implements Iterator<Integer> {
     private int _current;
 
     VertexIterator() {
@@ -342,10 +342,14 @@ public class DiGraph<EI> implements Graph<EI> {
       }
       return result;
     }
+
+    public void remove() {
+      throw new UnsupportedOperationException("use removeVertex");
+    }
   }
 
   /** This allows to iterate over all vertices of this graph */
-  public VertexIterator iterator() {
+  public Iterator<Integer> iterator() {
     return new VertexIterator();
   }
 
@@ -372,6 +376,13 @@ public class DiGraph<EI> implements Graph<EI> {
       return Collections.emptyList();
     // return Collections.unmodifiableCollection(result);
     return result; // not nice, but needed for minimization
+  }
+
+  /** Return true if the node has at least one outgoing edge. */
+  public boolean hasOutEdges(int vertex) {
+    EdgeContainer<EI> result = _outEdges.get(vertex);
+    if (result == null) return false;
+    return ! result.isEmpty();
   }
 
 
@@ -743,8 +754,8 @@ public class DiGraph<EI> implements Graph<EI> {
   public String toString(VertexPropertyMap<? extends Object> propMap) {
     StringBuilder strRep = new StringBuilder();
 
-    for ( VertexIterator it = iterator(); it.hasNext();) {
-      strRep.append(toString(it.next(), propMap));
+    for (int v : this) {
+      strRep.append(toString(v, propMap));
     }
 
     return strRep.toString();

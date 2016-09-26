@@ -73,6 +73,13 @@ public class DirectedBiGraph<EdgeInfo> extends DiGraph<EdgeInfo>
     return result; // not nice, but needed for minimization
   }
 
+  /** Return true if the node has at least one incoming edge. */
+  public boolean hasInEdges(int vertex) {
+    EdgeContainer<EdgeInfo> result = _inEdges.get(vertex);
+    if (result == null) return false;
+    return ! result.isEmpty();
+  }
+
   /** remove the given Edge */
   @Override
   public void removeEdge(Edge<EdgeInfo> edge) {

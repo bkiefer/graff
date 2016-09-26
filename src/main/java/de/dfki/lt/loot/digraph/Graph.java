@@ -30,6 +30,9 @@ public interface Graph<EI> extends Iterable<Integer> {
   /** return the edges emerging from vertex, may not return null */
   public abstract Iterable<Edge<EI>> getOutEdges(int vertex);
 
+  /** return true if the node has at least one outgoing edge */
+  public abstract boolean hasOutEdges(int vertex);
+
   /** return the edges ending in this vertex, may not return null */
   // public abstract Iterable<Edge<EdgeInfo>> getInEdges(int vertex);
 

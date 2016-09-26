@@ -70,8 +70,15 @@ public class TestDirectedBiGraph {
     assertEquals(2, dg.getNumberOfVertices());
     assertTrue(dg.isVertex(from));
     assertTrue(dg.isVertex(to));
+    assertFalse(dg.hasInEdges(from));
+    assertFalse(dg.hasInEdges(to));
+    assertFalse(dg.hasOutEdges(from));
+    assertFalse(dg.hasOutEdges(to));
     Edge<String> e = dg.newEdge(from + "->" + to, from, to);
-    assertEquals(from, e.getSource());
+    assertFalse(dg.hasInEdges(from));
+    assertTrue(dg.hasInEdges(to));
+    assertTrue(dg.hasOutEdges(from));
+    assertFalse(dg.hasOutEdges(to));    assertEquals(from, e.getSource());
     assertEquals(to, e.getTarget());
     assertEquals(e, dg.getOutEdges(from).iterator().next());
     assertEquals(e, dg.getInEdges(to).iterator().next());

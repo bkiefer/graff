@@ -8,4 +8,7 @@ public interface AbstractBiGraph<EdgeInfo> extends Graph<EdgeInfo> {
   /** return the edges ending in this vertex, may not return null */
   public abstract Iterable<Edge<EdgeInfo>> getInEdges(int vertex);
 
+  /** return the edges ending in this vertex, may not return null */
+  public abstract boolean hasInEdges(int vertex);
+
 }

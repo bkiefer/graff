@@ -6,7 +6,6 @@
 package de.dfki.lt.loot.digraph.algo;
 
 import de.dfki.lt.loot.digraph.DiGraph;
-import de.dfki.lt.loot.digraph.DiGraph.VertexIterator;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.VertexBooleanPropertyMap;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
@@ -39,8 +38,7 @@ public class TransitiveReduction {
 
     VertexBooleanPropertyMap reached = new VertexBooleanPropertyMap(graph);
 
-    for (VertexIterator vit = graph.iterator(); vit.hasNext();) {
-      int v = vit.next();
+    for (int v : graph) {
       List<Integer> newList = new ArrayList<>();
       newList.add(v);
       closure.put(v, newList);
