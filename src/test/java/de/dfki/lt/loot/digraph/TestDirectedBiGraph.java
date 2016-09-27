@@ -88,6 +88,18 @@ public class TestDirectedBiGraph {
   }
 
   @Test
+  public void testHasEdge() {
+    DirectedBiGraph<String> dg = new DirectedBiGraph<>();
+    assertEquals(0, dg.getNumberOfVertices());
+    int from = dg.newVertex();
+    int to = dg.newVertex();
+    Edge<String> e = dg.newEdge(from + "->" + to, from, to);
+    assertFalse(dg.hasEdge(to, from));
+    assertTrue(dg.hasEdge(from, to));
+  }
+
+
+  @Test
   public void testRemoveEdge() {
     DirectedBiGraph<String> dg = new DirectedBiGraph<>();
     int from = dg.newVertex();

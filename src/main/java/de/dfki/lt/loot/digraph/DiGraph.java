@@ -258,7 +258,10 @@ public class DiGraph<EI> implements Graph<EI> {
   }
 
   public boolean hasEdge(int from, int to) {
-    return _outEdges.get(from).findTarget(to) != null;
+     EdgeContainer<EI> out = _outEdges.get(from);
+     if (out == null)
+       return false;
+     return out.findTarget(to) != null;
   }
 
   /** This creates a new instance of <code>DirectedGraph</code>.
