@@ -14,6 +14,7 @@ public class TestPartition {
     for(int i = 0; i < 5; ++i) {
       assertEquals(i, p.findRepresentative(i));
     }
+    assertEquals(5, p.size());
   }
 
   @Test

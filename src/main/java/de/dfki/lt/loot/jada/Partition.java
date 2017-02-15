@@ -112,4 +112,7 @@ public class Partition {
     return size[elt];
   }
 
+  public int size() {
+    return members.length;
+  }
 }
