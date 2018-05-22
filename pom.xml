@@ -26,28 +26,6 @@
     <encoding>UTF-8</encoding>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>FORSCHUNGSSOFTWARE</id>
-      <name>FORSCHUNGSSOFTWARE</name>
-      <url>http://www.forschungssoftware.de/nexus/content/groups/public/</url>
-    </repository>
-  </repositories>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>FORSCHUNGSSOFTWARE</id>
-      <name>FORSCHUNGSSOFTWARE</name>
-      <url>http://www.forschungssoftware.de/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-
-    <repository>
-      <id>FORSCHUNGSSOFTWARE</id>
-      <name>FORSCHUNGSSOFTWARE</name>
-      <url>http://www.forschungssoftware.de/nexus/content/repositories/releases/</url>
-    </repository>
-  </distributionManagement>
-
   <build>
     <plugins>
       <plugin>
@@ -68,8 +46,6 @@
       </plugin>
     </plugins>
   </build>
-
-
 
   <dependencies>
     <dependency>
@@ -94,7 +70,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
+      <version>1.2.17</version>
     </dependency>
   </dependencies>
 
