@@ -4,3 +4,6 @@
 Aufbewahrung/
 build.xml
 target
+.idea
+*~
+**~
