@@ -1,10 +1,5 @@
 package de.dfki.lt.loot.digraph;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
 
@@ -83,16 +78,16 @@ public class DiGraph<EI> implements Graph<EI> {
   }
   */
 
-  private class ArrayListEdgeContainer<EI>
-  extends ArrayList<Edge<EI>> implements EdgeContainer<EI> {
+  private class ArrayListEdgeContainer<T>
+  extends ArrayList<Edge<T>> implements EdgeContainer<T> {
     private static final long serialVersionUID = 2922994063452493448L;
 
-    public boolean removeEdge(Edge<EI> e) {
+    public boolean removeEdge(Edge<T> e) {
       return remove(e);
     }
 
-    public Edge<EI> findTarget(int to) {
-      for (Edge<EI> e: this)
+    public Edge<T> findTarget(int to) {
+      for (Edge<T> e: this)
         if (e.getTarget() == to) return e;
       return null;
     }
@@ -100,23 +95,23 @@ public class DiGraph<EI> implements Graph<EI> {
   }
 
   /**/
-  private class SetEdgeContainer<EI>
-  extends HashMap<Integer, Edge<EI>> implements EdgeContainer<EI> {
+  private class SetEdgeContainer<T>
+  extends HashMap<Integer, Edge<T>> implements EdgeContainer<T> {
     private static final long serialVersionUID = 2922994063452493449L;
 
     @Override
-    public Iterator<Edge<EI>> iterator() {
+    public Iterator<Edge<T>> iterator() {
       return values().iterator();
     }
 
     @Override
-    public boolean add(Edge<EI> e) {
+    public boolean add(Edge<T> e) {
       put(e.getTarget(), e);
       return false;
     }
 
-    public boolean removeEdge(Edge<EI> e) {
-      Iterator<Edge<EI>> it = values().iterator();
+    public boolean removeEdge(Edge<T> e) {
+      Iterator<Edge<T>> it = values().iterator();
       while(it.hasNext()) {
         if (it.next() == e) {
           it.remove();
@@ -128,11 +123,11 @@ public class DiGraph<EI> implements Graph<EI> {
 
 
     //@Override
-    //public Iterator<Edge<EI>> getEdgeIterator(EdgeContainer<EI> edgeContainer) {
-    //  return new EdgeIterator<EI>(values().iterator(), edgeContainer);
+    //public Iterator<Edge<T>> getEdgeIterator(EdgeContainer<T> edgeContainer) {
+    //  return new EdgeIterator<T>(values().iterator(), edgeContainer);
     //}
 
-    public Edge<EI> findTarget(int to) {
+    public Edge<T> findTarget(int to) {
       return get(to);
     }
   }

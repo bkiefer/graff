@@ -5,11 +5,12 @@
  */
 package de.dfki.lt.loot.digraph;
 
+import static de.dfki.lt.loot.util.Predicates.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -71,48 +72,6 @@ public class Utils {
 
   public DiGraph<String> graphCyclic;
   public DiGraph<String> graphAcyclic;
-
-  /**
-   * <code>EqualsPredicate</code> is an inner class that defines a functional
-   * object used to check if two instances of the argument type are equal.
-   */
-  static class EqualsPredicate<ArgumentType>
-    implements BinaryPredicate<ArgumentType> {
-
-    /**
-     * This compares the given objects of type ArgumentTyp and returns
-     * <code>true</code> if they are compatible.
-     *
-     * @param arg1 a <code>ArgumentType</code> with the first argument
-     * @param arg2 a <code>ArgumentType</code> with the second argument
-     * @return a <code>boolean</code> indicating if the arguments are compatible
-     */
-    public boolean compare(ArgumentType arg1, ArgumentType arg2) {
-
-      return arg1.equals(arg2);
-    }
-  }
-
-  /**
-   * <code>ComparableComparator</code> is an inner class that defines a functional
-   * object used to compare two instances of the argument type using their
-   * internal comparison method
-   */
-  static class ComparableComparator<ArgumentType extends Comparable<ArgumentType>>
-    implements Comparator<ArgumentType> {
-
-    /**
-     * This compares the given objects of type ArgumentTyp and returns
-     * <code>true</code> if they are compatible.
-     *
-     * @param arg1 a <code>ArgumentType</code> with the first argument
-     * @param arg2 a <code>ArgumentType</code> with the second argument
-     * @return a <code>boolean</code> indicating if the arguments are compatible
-     */
-    public int compare(ArgumentType arg1, ArgumentType arg2) {
-      return arg1.compareTo(arg2);
-    }
-  }
 
 
   /** create a graph from a readable specification.

@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.digraph;
 
+import static de.dfki.lt.loot.util.Predicates.*;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
@@ -13,7 +14,6 @@ import java.util.regex.Pattern;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.dfki.lt.loot.digraph.BinaryPredicate.EqualsPredicate;
 
 /**
  * {@link TestDirectedGraph} is a test class for {@link DiGraph}.

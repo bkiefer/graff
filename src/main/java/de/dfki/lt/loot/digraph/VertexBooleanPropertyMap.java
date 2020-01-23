@@ -3,6 +3,7 @@ package de.dfki.lt.loot.digraph;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 
 public class VertexBooleanPropertyMap implements VertexPropertyMap<Boolean> {
@@ -54,11 +55,11 @@ public class VertexBooleanPropertyMap implements VertexPropertyMap<Boolean> {
   }
 
   public List<Integer>
-    findVertices(Boolean val, BinaryPredicate<Boolean> pred) {
+    findVertices(Boolean val, BiPredicate<Boolean, Boolean> pred) {
 
     List<Integer> result = new ArrayList<Integer>(_map.size());
     for(int i = 0; i < _map.size(); ++i) {
-      if (_graph.isVertex(i) && pred.compare(_map.get(i), val)) {
+      if (_graph.isVertex(i) && pred.test(_map.get(i), val)) {
         result.add(i);
       }
     }

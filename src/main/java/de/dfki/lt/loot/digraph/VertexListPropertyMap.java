@@ -2,6 +2,7 @@ package de.dfki.lt.loot.digraph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 
 public class VertexListPropertyMap<ValueType>
@@ -51,11 +52,11 @@ public class VertexListPropertyMap<ValueType>
   }
 
   public List<Integer>
-    findVertices(ValueType val, BinaryPredicate<ValueType> pred) {
+    findVertices(ValueType val, BiPredicate<ValueType, ValueType> pred) {
 
     List<Integer> result = new ArrayList<Integer>(_map.size());
     for(int i = 0; i < _map.size(); ++i) {
-      if (_graph.isVertex(i) && pred.compare(_map.get(i), val)) {
+      if (_graph.isVertex(i) && pred.test(_map.get(i), val)) {
         result.add(i);
       }
     }

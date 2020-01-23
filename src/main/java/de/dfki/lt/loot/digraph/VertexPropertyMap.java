@@ -1,6 +1,7 @@
 package de.dfki.lt.loot.digraph;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 
 
 public interface VertexPropertyMap<ValueType> {
@@ -16,5 +17,5 @@ public interface VertexPropertyMap<ValueType> {
   public void removeRange(int from, int to);
 
   public List<Integer>
-    findVertices(ValueType val, BinaryPredicate<ValueType> pred);
+    findVertices(ValueType val, BiPredicate<ValueType, ValueType> pred);
 }
