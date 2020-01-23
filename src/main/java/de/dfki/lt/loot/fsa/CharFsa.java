@@ -251,6 +251,7 @@ public class CharFsa extends FiniteAutomaton<Character> {
         ok = false;
       }
     }
+    in.close();
     return ok;
   }
 

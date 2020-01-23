@@ -1,6 +1,5 @@
 package de.dfki.lt.loot.fsa.algo;
 
-import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.procedure.TIntProcedure;
 import gnu.trove.set.hash.TIntHashSet;
 import gnu.trove.stack.TIntStack;
