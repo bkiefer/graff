@@ -57,6 +57,24 @@ public class Edge<EdgeInfo> {
     return this._to;
   }
 
+  /** returns the start vertex of the edge, expecting that from is the start
+   *  vertex, to check if we got an inverse edge from a graph that is supposed
+   *  to be undirected.
+   * @return the start vertex
+   */
+  public int getSourceForTarget(int to) {
+    return to == this._to ? this._from : this._to;
+  }
+
+  /** returns the end vertex of the edge, expecting that from is the start
+   *  vertex, to check if we got an inverse edge from a graph that is supposed
+   *  to be undirected.
+   * @return the end vertex
+   */
+  public int getTargetForSource(int from) {
+    return from == this._from ? this._to : this._from;
+  }
+
   /** sets the info assigned to this edge.
    * @return a <code>EdgeInfo</code> with the info
    */

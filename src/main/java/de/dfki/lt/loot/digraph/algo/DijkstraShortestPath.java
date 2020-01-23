@@ -70,11 +70,12 @@ public class DijkstraShortestPath<EdgeInfo, T> {
       for(Edge<EdgeInfo> outEdge : g.getOutEdges(vertex)) {
         T alt = ops.add(vertexDistance, getWeight.get(outEdge));
 
-        int target = outEdge.getTarget();
+        // might be applied to a undirected graph (edges inversed)
+        int target = outEdge.getTargetForSource(vertex);
 
         if (distance.get(target) == null
             || ops.compare(alt, distance.get(target)) < 0) {
-          distance.put(outEdge.getTarget(), alt);
+          distance.put(target, alt);
           HeapNode<Integer> targetHeapNode = heapNodes.get(target);
           if (targetHeapNode == null) {
             heapNodes.put(target, q.insert(target));
@@ -88,7 +89,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
     return null;
   }
 
-
+  /** Return the shortest path between startVertex and endVertex */
   public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, int endVertex, OrderedMonoid<T> weightOps,
       WeightFunction<EdgeInfo, T> getWeight) {
@@ -97,6 +98,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
     return shortestPath(g, startVertex, end, weightOps, getWeight);
   }
 
+  /** Return the shortest paths to any vertex in the graph (?) */
   public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, OrderedMonoid<T> weightOps,
       WeightFunction<EdgeInfo, T> getWeight) {
@@ -104,6 +106,9 @@ public class DijkstraShortestPath<EdgeInfo, T> {
     return shortestPath(g, startVertex, end, weightOps, getWeight);
   }
 
+  /** Return the shortest path starting at startVertex and ending in one of the
+   *  nodes contained in endVertices.
+   */
   public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, List<Integer> endVertices,
       OrderedMonoid<T> weightOps, WeightFunction<EdgeInfo, T> getWeight) {
@@ -114,10 +119,12 @@ public class DijkstraShortestPath<EdgeInfo, T> {
     List<Edge<EdgeInfo>> result = new LinkedList<Edge<EdgeInfo>>();
     // is there a connection from start to end: distance < infinity?
     if (shortest != null) {
+      int last = shortest;
       Edge<EdgeInfo> curr = predecessor.get(shortest);
       while (curr != null) {
         result.add(0, curr);
-        curr = predecessor.get(curr.getSource());
+        // might be the reverse edge for an undirected graph
+        curr = predecessor.get(last = curr.getSourceForTarget(last));
       }
     }
     return result;
