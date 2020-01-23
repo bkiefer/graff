@@ -1,5 +1,7 @@
 package de.dfki.lt.loot.digraph.algo;
 
+import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.*;
+import static de.dfki.lt.loot.util.Predicates.*;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
@@ -12,7 +14,6 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-import de.dfki.lt.loot.digraph.BinaryPredicate;
 import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
@@ -20,7 +21,6 @@ import de.dfki.lt.loot.digraph.VertexPropertyMap;
 import de.dfki.lt.loot.digraph.weighted.EdgeWeight;
 import de.dfki.lt.loot.digraph.weighted.IntMonoid;
 import de.dfki.lt.loot.digraph.weighted.WeightInfo;
-import static org.junit.Assert.assertEquals;
 
 
 class NameWeight implements WeightInfo<Integer> {
@@ -78,7 +78,7 @@ public class TestDijkstraShortestPath {
     graph = readGraph(new StringReader(exampleGraph));
 
     //System.out.println(graph);
-    //graph.printGraph("testGraph");
+    //printGraph(graph, "testGraph");
 
     // use DFS with special visitor
     DijkstraShortestPath<NameWeight, Integer> algorithm =

@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.fsa;
 
+import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -10,9 +11,7 @@ import java.util.List;
 import org.junit.Test;
 
 import de.dfki.lt.loot.fsa.FiniteAutomaton.SubAutomaton;
-import de.dfki.lt.loot.fsa.algo.Determinization;
 import de.dfki.lt.loot.fsa.algo.Minimization;
-import static org.hamcrest.CoreMatchers.is;
 
 /**
  * {@link TestStringFsa} is a test class for {@link StringFsa}.
@@ -542,8 +541,8 @@ public class TestStringFsa {
   public static void main(String[] args) {
     StringFsa a = new StringFsa();
     a.readFromText(Paths.get("/home/kiefer/tmp/autom.txt"));
-    a.printGraph("autom.txt");
+    printGraph(a, "autom.txt");
     StringFsa b = a.determinize();
-    b.printGraph("automdet.txt");
+    printGraph(b, "automdet.txt");
   }
 }

@@ -124,9 +124,24 @@ public class DirectedBiGraph<EdgeInfo> extends DiGraph<EdgeInfo>
         }
         _inEdges.set(vertex, null);
       }
-      removeVertexLazy(vertex);
+      super.removeVertexLazy(vertex);
     }
   }
+
+  /** For this kind of graph, this is the same as remove, since there is no
+   *  gain in not removing the edges.
+   *
+   * @param vertex the vertex to remove from the graph
+   */
+  @Override
+  public void removeVertexLazy(int vertex) {
+    removeVertex(vertex);
+  }
+
+  /** Remove all edges pointing to a deleted vertex */
+  public void cleanupEdges() {
+    // a no-op, see above
+  };
 
   @Override
   protected void compactRenumber(int[] newNumber) {

@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.fsa;
 
+import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -115,12 +116,12 @@ public class TestMinimization {
     for (int i = 0; i < in.length; ++i) {
       CharFsa expected = new CharFsa();
       int[] expected_res = readFromText(out[i], expected);
-      if (PRINT_GRAPHS) expected.printGraph(i+"_min1exp.dot");
+      if (PRINT_GRAPHS) printGraph(expected, i+"_min1exp.dot");
 
       CharFsa fsa = new CharFsa();
       int[] res = readFromText(in[i], fsa);
       if (PRINT_GRAPHS) {
-        fsa.printGraph(i+"_min0in.dot");
+        printGraph(fsa, i+"_min0in.dot");
         System.out.println(String.format("%d alphabet symbols",
             fsa.getAlphabet().size()));
         System.out.println(String.format("%d states read", res[0]));
@@ -129,7 +130,7 @@ public class TestMinimization {
         System.out.println("states: " + fsa.getNumberOfActiveVertices());
       }
       Minimization.minimize(fsa, fsa.getComparator());
-      if (PRINT_GRAPHS) fsa.printGraph(i+"_min2hout.dot");
+      if (PRINT_GRAPHS) printGraph(fsa, i+"_min2hout.dot");
 
       assertEquals("" + i, expected.getNumberOfActiveVertices(),
           fsa.getNumberOfActiveVertices());
@@ -150,7 +151,7 @@ public class TestMinimization {
       int[] res = readFromText(in[i], fsa);
 
       MinimizationBrzowski.minimize(fsa, fsa.getComparator());
-      if (PRINT_GRAPHS) fsa.printGraph(i+"_min2bout.dot");
+      if (PRINT_GRAPHS) printGraph(fsa, i+"_min2bout.dot");
 
       assertEquals("" + i, expected.getNumberOfActiveVertices(),
           fsa.getNumberOfActiveVertices());

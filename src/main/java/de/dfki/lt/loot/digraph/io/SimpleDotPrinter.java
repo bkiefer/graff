@@ -1,6 +1,10 @@
-package de.dfki.lt.loot.digraph;
+package de.dfki.lt.loot.digraph.io;
 
 import java.io.PrintWriter;
+
+import de.dfki.lt.loot.digraph.Edge;
+import de.dfki.lt.loot.digraph.Graph;
+import de.dfki.lt.loot.digraph.VertexPropertyMap;
 
 /** Class to print a directed graph in graphviz syntax. If a VertexPropertyMap
  *  "names" is registered with the graph, it is used to print the node labels,
@@ -9,20 +13,25 @@ import java.io.PrintWriter;
  *  Edges are printed including the edge info.
  *
  */
-public class SimplePrinter<T> implements DirectedGraphPrinter<T> {
+public class SimpleDotPrinter<T> implements GraphElementPrinter<T> {
   @SuppressWarnings("unused")
-  private DiGraph<T> _graph;
+  private Graph<T> _graph;
   private VertexPropertyMap<String> _nodeNames;
 
   @SuppressWarnings("unchecked")
-  public SimplePrinter(DiGraph<T> graph) {
+  public void startGraph(PrintWriter out, Graph<T> graph) {
     _graph = graph;
     _nodeNames = (VertexPropertyMap<String>) graph.getPropertyMap("names");
+    out.println("digraph test { ");
   }
 
-  public String getDefaultGraphAttributes() { return ""; }
+  public void endGraph(PrintWriter out) {
+    out.println("}");
+    _graph = null;
+    _nodeNames = null;
+  }
 
-  public  void dotPrintNode(PrintWriter out, int node) {
+  public void printNode(PrintWriter out, int node) {
     out.print("n" + node);
     if (_nodeNames != null) {
       out.print(" [label=\"" + _nodeNames.get(node) + "(" +  node + ")\"]");
@@ -32,7 +41,7 @@ public class SimplePrinter<T> implements DirectedGraphPrinter<T> {
     out.println(";");
   }
 
-  public void dotPrintEdge(PrintWriter out, Edge<T> edge) {
+  public void printEdge(PrintWriter out, Edge<T> edge) {
     out.print("n"
         + edge.getSource()
         + " -> n"

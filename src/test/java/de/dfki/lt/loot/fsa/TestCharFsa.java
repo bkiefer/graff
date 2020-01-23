@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.fsa;
 
+import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -39,14 +40,14 @@ public class TestCharFsa {
 
     // dot print automaton
     Path automatonPath = Paths.get(String.format(pathPattern, id));
-    automaton.dotPrint(automatonPath);
+    print(automaton, automatonPath);
     // convert to .png
-    FiniteAutomaton.dot2png(automatonPath);
+    dot2png(automatonPath);
     // dot print determinized automaton
     Path detAutomatonPath = Paths.get(String.format(pathPattern, id+"det"));
-    detAutomaton.dotPrint(detAutomatonPath);
+    print(detAutomaton, detAutomatonPath);
     // convert to .png
-    FiniteAutomaton.dot2png(detAutomatonPath);
+    dot2png(detAutomatonPath);
   }
 
 

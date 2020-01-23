@@ -1,23 +1,14 @@
 package de.dfki.lt.loot.digraph;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.Reader;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
+import java.util.function.Function;
+
+import de.dfki.lt.loot.util.FilteredIterator;
 
 
 /**
@@ -31,12 +22,6 @@ import java.util.Queue;
  * @version $Id$
  */
 public class DiGraph<EI> implements Graph<EI> {
-
-  /**
-   * Contains the path to the dot.exe delivered with Graphviz.
-   */
-  private static final String WIN_DOT =
-      "C:/Program Files (x86)/Graphviz 2.28/bin/dot.exe";
 
  /** For each vertex, this contains the outgoing and incoming edges of this
    *  graph.
@@ -97,67 +82,6 @@ public class DiGraph<EI> implements Graph<EI> {
     }
   }
   */
-
-
-  private static class SRRunnable implements Runnable {
-    private Reader _r ;
-    private StringBuilder _sb = new StringBuilder();
-
-    public SRRunnable(InputStream in) { _r = new InputStreamReader(in); }
-
-    public void run() {
-      int c = 0;
-      try {
-        while ( (c = _r.read()) != -1)
-          _sb.append((char)c);
-      }
-      catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    }
-
-    @Override
-    public String toString() {
-      return _sb.toString();
-    }
-  }
-
-  /**
-   * Creates a .gif or .png image for the given .dot graph.
-   *
-   * @param dotGraphPath
-   *          the path to the .dot graph
-   */
-  public static void dot2png(Path dotGraphPath) {
-
-    System.out.format("converting %s ..." , dotGraphPath);
-    Process process;
-    try {
-      if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
-        String command = String.format("%s -Tgif %2$s -o\"%2$s.gif\" -Kdot",
-            WIN_DOT, dotGraphPath);
-        process = Runtime.getRuntime().exec(command);
-      } else {
-        String[] command = { "sh", "-c",
-            "dot -Tpng '" + dotGraphPath + "' -o'" + dotGraphPath + ".png' -Kdot"
-        };
-        process = Runtime.getRuntime().exec(command);
-      }
-      SRRunnable err = new SRRunnable(process.getErrorStream());
-      SRRunnable out = new SRRunnable(process.getInputStream());
-      Thread e = new Thread(err);
-      e.run();
-      Thread o = new Thread(out);
-      o.run();
-      System.out.println(" : " + process.waitFor() +
-          "|" + err.toString() + "|" + out.toString());
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
 
   private class ArrayListEdgeContainer<EI>
   extends ArrayList<Edge<EI>> implements EdgeContainer<EI> {
@@ -471,49 +395,6 @@ public class DiGraph<EI> implements Graph<EI> {
   }
 
 
-  private class FilteredEdgeIterator
-    implements Iterator<Edge<EI>>, Iterable<Edge<EI>> {
-
-    final private EI _info;
-    final private Comparator<EI> _comp;
-    private Iterator<Edge<EI>> _it;
-    private Edge<EI> _next;
-
-    public FilteredEdgeIterator(int v, EI i, Comparator<EI> c) {
-      _info = i;
-      _comp = c;
-      _it = getOutEdges(v).iterator();
-      findNext();
-    }
-
-    private void findNext() {
-      while (_it.hasNext()) {
-        _next = _it.next();
-        if (_comp.compare(_next.getInfo(), _info) == 0) return;
-      }
-      _next = null;
-    }
-
-    @Override
-    public boolean hasNext() {
-      return _next != null;
-    }
-
-    @Override
-    public Edge<EI> next() {
-      Edge<EI> result = _next;
-      findNext();
-      return result;
-    }
-
-    @Override
-    public void remove() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public Iterator<Edge<EI>> iterator() { return this; }
-  }
-
-
   /**
    * This returns all edges emerging from vertex where the edge info is
    * compatible to the given edge info according to the given predicate.
@@ -527,7 +408,8 @@ public class DiGraph<EI> implements Graph<EI> {
       int vertex,
       EI anEdgeInfo,
       Comparator<EI> comp) {
-    return new FilteredEdgeIterator(vertex, anEdgeInfo, comp);
+    return new FilteredIterator<Edge<EI>, EI>(getOutEdges(vertex), anEdgeInfo,
+        comp, (Function<Edge<EI>, EI>) e -> e.getInfo());
   }
 
   /**
@@ -933,77 +815,6 @@ public class DiGraph<EI> implements Graph<EI> {
   public void bfs(int vertex, GraphVisitor<EI> visitor) {
     bfsVisit(vertex, visitor, new BitSet(), false);
   }
-
-  /**
-   * This writes this graph in graphviz format to the given file so that it can
-   * be processed with the graphviz package (http://www.graphviz.org/)
-   *
-   * @param fileName a <code>String</code> with the file name
-   * @param printer a class with which special printing can be handled
-   * @throws <code>IOException</code> if an error ccurs when writing the file
-   */
-  public void dotPrint(Path fileName, DirectedGraphPrinter<EI> printer)
-    throws IOException {
-
-    PrintWriter out =
-      new PrintWriter(Files.newBufferedWriter(
-          fileName, Charset.defaultCharset()));
-    out.println("digraph test { " + printer.getDefaultGraphAttributes());
-
-    for (int node = 0; node < getNumberOfVertices(); ++node) {
-      if (isVertex(node)) {
-        printer.dotPrintNode(out, node);
-      }
-    }
-
-    for (int node = 0; node < getNumberOfVertices(); ++node) {
-      if (isVertex(node) && getOutEdges(node) != null) {
-        for (Edge<EI> edge : getOutEdges(node)) {
-          printer.dotPrintEdge(out, edge);
-        }
-      }
-    }
-    out.println("}");
-    out.close();
-  }
-
-  /**
-   * This writes this graph in graphviz format to the given file so that it can
-   * be processed with the graphviz package (http://www.graphviz.org/)
-   *
-   * @param fileName a <code>String</code> with the file name
-   * @throws <code>IOException</code> if an error ccurs when writing the file
-   */
-  public void dotPrint(Path fileName) throws IOException {
-    dotPrint(fileName, new SimplePrinter<EI>(this));
-  }
-
-  /** Convert the graph into graphviz format and create a PNG graphic file
-   *  out of that representation using the dot program.
-   */
-  public void printGraph(String name, DirectedGraphPrinter<EI> printer) {
-    try {
-      Path filePath = new File("/tmp/" + name).toPath();
-      dotPrint(filePath, printer);
-      dot2png(filePath);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /** Convert the graph into graphviz format and create a PNG graphic file
-   *  out of that representation using the dot program.
-   */
-  public void printGraph(String name) {
-    try {
-      Path filePath = new File("/tmp/" + name).toPath();
-      dotPrint(filePath);
-      dot2png(filePath);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
 
   /* Use converseLazy instead */
 

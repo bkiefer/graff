@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.fsa;
 
+import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import java.io.IOException;
 
 import de.dfki.lt.loot.fsa.algo.Minimization;
@@ -38,21 +39,21 @@ public class FiniteAutomatonTest {
       if (automaton != null) {
         // show result automaton
         //System.out.println(automaton);
-        automaton.printGraph(i + "-0.dot");
+        printGraph(automaton, i + "-0.dot");
 
         // determinize automaton
         CharFsa detAutomaton = automaton.determinize();
         // show determinized automaton
         //System.out.println(detAutomaton);
         // print determinized automaton in VCG format
-        detAutomaton.printGraph(i + "-1det.dot");
+        printGraph(detAutomaton, i + "-1det.dot");
 
         // minimize automaton (Hopcroft)
         Minimization.minimize(detAutomaton, detAutomaton._comp);
         // show minimized automaton
         //System.out.println(detAutomaton);
         // print minimized automaton in VCG format
-        detAutomaton.printGraph(i + "-2min.dot");
+        printGraph(detAutomaton, i + "-2min.dot");
 
         detAutomaton = CharFsa.compileRegex(testRegExps[i]).determinize();
         // minimize automaton
@@ -60,7 +61,7 @@ public class FiniteAutomatonTest {
         // show minimized automaton
         //System.out.println(detAutomaton);
         // print minimized automaton in VCG format
-        detAutomaton.printGraph(i + "-3min.dot");
+        printGraph(detAutomaton, i + "-3min.dot");
 
         /*
         // compact automaton

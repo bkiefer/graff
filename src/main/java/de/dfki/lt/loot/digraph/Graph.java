@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.digraph;
 
+import java.util.BitSet;
 import java.util.Comparator;
 
 /** A DirectedGraph interface containing all methods currently needed for
@@ -87,5 +88,19 @@ public interface Graph<EI> extends Iterable<Integer> {
    */
   public abstract Graph<EI> converseLazy();
 
+  /** register a property map with this graph, so that it can be retrieved
+   *  by name and will be synchronized regarding delete and compact operations
+   */
+  public abstract void register(String name, VertexPropertyMap<?> map);
 
+  /** return the registered property map with the given name, if it exists */
+  public abstract VertexPropertyMap<?> getPropertyMap(String name);
+
+  /** register a property map with this graph, so that it can be retrieved
+   *  by name and will be synchronized regarding delete and compact operations
+   */
+  public abstract void register(String name, BitSet map);
+
+  /** return the registered property map with the given name, if it exists */
+  public abstract BitSet getBooleanPropertyMap(String name);
 }

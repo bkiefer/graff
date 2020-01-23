@@ -1,17 +1,14 @@
 package de.dfki.lt.loot.digraph;
 
+import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import static de.dfki.lt.loot.digraph.Utils.*;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
-import java.util.List;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 /**
  * <code>DirectedGraphTest</code> is a test class for {@link DiGraph}.
@@ -30,14 +27,14 @@ public class TestDirectedGraph2 {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader( exampleBfsGraph));
-    graph.printGraph("XXXinit");
+    printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
-    graph.printGraph("XXXplain");
+    printGraph(graph, "XXXplain");
     int v = graph.getNumberOfActiveVertices();
     int e = TestDirectedGraph.countEdges(graph);
     graph.compact();
-    graph.printGraph("XXXcompact");
+    printGraph(graph, "XXXcompact");
     assertEquals(v, graph.getNumberOfActiveVertices());
     assertEquals(e, TestDirectedGraph.countEdges(graph));
     assertEquals(graph.getNumberOfActiveVertices(),
@@ -70,14 +67,14 @@ public class TestDirectedGraph2 {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader( exampleBfsGraph));
-    graph.printGraph("XXXinit");
+    printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
-    graph.printGraph("XXXplain");
+    printGraph(graph, "XXXplain");
     int v = graph.getNumberOfActiveVertices();
     int e = TestDirectedGraph.countEdges(graph);
     graph.compactStable();
-    graph.printGraph("XXXcompact");
+    printGraph(graph, "XXXcompact");
     assertEquals(v, graph.getNumberOfActiveVertices());
     assertEquals(e, TestDirectedGraph.countEdges(graph));
     assertEquals(graph.getNumberOfActiveVertices(),

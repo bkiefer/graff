@@ -1,11 +1,5 @@
 package de.dfki.lt.loot.fsa;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
@@ -17,16 +11,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.dfki.lt.loot.digraph.DiGraph;
-import de.dfki.lt.loot.digraph.DirectedGraphPrinter;
-import de.dfki.lt.loot.digraph.Edge;
-import de.dfki.lt.loot.digraph.GraphVisitorAdapter;
-import de.dfki.lt.loot.digraph.VertexListPropertyMap;
-import de.dfki.lt.loot.digraph.VertexPropertyMap;
+import de.dfki.lt.loot.digraph.*;
+import de.dfki.lt.loot.digraph.io.GraphPrinterFactory;
 import de.dfki.lt.loot.fsa.algo.Determinization;
 
 public class FiniteAutomaton<EdgeInfo> extends DiGraph<EdgeInfo>
 implements AbstractAutomaton<EdgeInfo> {
+
+  static {
+    GraphPrinterFactory.register(new FsaDotPrinter<Object>(),
+        (g -> g instanceof FiniteAutomaton<?>));
+  }
 
   /** A mini sub automaton in this automaton */
   public class SubAutomaton {
@@ -363,135 +358,6 @@ implements AbstractAutomaton<EdgeInfo> {
   // ======================================================================
   // I/O methods
   // ======================================================================
-
-  private class FsaPrinter implements DirectedGraphPrinter<EdgeInfo> {
-    public String defaultNodeAttributes =
-        "shape=circle, width=.6, fixedsize=true";
-
-    private VertexPropertyMap<String> _nodeNames;
-    public String defaultEdgeAttributes = null;
-
-    @SuppressWarnings("unchecked")
-    public FsaPrinter(DiGraph<EdgeInfo> graph) {
-      _nodeNames = (VertexPropertyMap<String>) graph.getPropertyMap("names");
-    }
-
-    private String escapeForDot(String in) {
-      String out = in.replaceAll("([^\\\\])\"", "$1\\\\\"");
-      return (out.charAt(0) == '"') ? "\\" + out : out;
-    }
-
-    public String getDefaultGraphAttributes() {
-      return "rankdir=LR; splines=polyline;";
-    }
-
-    /**
-     * Print a state of the FSA, taking into account special printing for start
-     * and final states.
-     */
-    public void dotPrintNode(PrintWriter out, int node) {
-      out.print("n" + node);
-      ArrayList<String> attribs = new ArrayList<String>();
-      if (defaultNodeAttributes != null)
-        attribs.add(defaultNodeAttributes);
-      if (_nodeNames != null)
-        attribs.add(" label=\"" + _nodeNames.get(node) +"\"");
-      if (node == _initialState)
-        attribs.add(" color=green ");
-      if (isFinalState(node))
-        attribs.add(" style=filled, fillcolor=red ");
-
-      if (!attribs.isEmpty()) {
-        out.print("[");
-        for (int i = 0; i<attribs.size(); ++i){
-          if (i > 0) out.print(",");
-          out.print(attribs.get(i));
-        }
-        out.print("]");
-      }
-      out.println(";");
-    }
-
-    /** Print a FSA transition */
-    public void dotPrintEdge(PrintWriter out, Edge<EdgeInfo> edge) {
-      EdgeInfo transChar = edge.getInfo();
-      out.print("n" + edge.getSource() + " -> n" + edge.getTarget()
-                + "[ ");
-      if (defaultEdgeAttributes != null) {
-        out.print(defaultEdgeAttributes + ", ");
-      }
-      if (isEpsilon(transChar)) {
-        out.println("label=\"\u03B5\", fontcolor=red];");
-      }
-      else {
-        out.println("label=\"" + escapeForDot(transChar.toString()) + "\"];");
-      }
-    }
-  }
-
-
-  /**
-   * This writes this fsa in graphviz format to the given file so that it can
-   * be processed with the graphviz package (http://www.graphviz.org/)
-   *
-   * @param fileName a <code>String</code> with the file name
-   * @throws <code>IOException</code> if an error occurs when writing the file
-   */
-  @Override
-  public void dotPrint(Path fileName) throws IOException {
-    final DirectedGraphPrinter<EdgeInfo> printer = new FsaPrinter(this);
-    dotPrint(fileName, printer);
-  }
-
-
-  /**
-   * This writes this graph in vcg format to the given file so that it can be
-   * processed with the VCG tool
-   * (http://rw4.cs.uni-sb.de/users/sander/html/gsvcg1.html)
-   *
-   * @param fileName a <code>String</code> with the file name
-   * @throws <code>IOException</code> if an error occurs when writing the file
-   */
-  public void vcgPrint(String fileName)
-    throws IOException {
-
-    PrintWriter out =
-      new PrintWriter(
-          new BufferedWriter(
-              new OutputStreamWriter(
-                  new FileOutputStream(fileName))));
-    out.println("graph: { orientation: left_to_right display_edge_labels: yes");
-
-    for (int node = 0 ; node < getNumberOfVertices(); ++node) {
-      if (isVertex(node)) {
-        out.print("node: { title: \"" + node + "\" ");
-        if (node == _initialState) {
-          out.print("color: green ");
-        }
-        if (isFinalState(node)) {
-          out.print("bordercolor: red ");
-        }
-        out.println("}");
-      }
-
-      for (Edge<EdgeInfo> edge : getOutEdges(node)) {
-        EdgeInfo transChar = edge.getInfo();
-        out.println("edge: { sourcename: \"" + node
-            + "\" targetname: \"" + edge.getTarget()
-            + "\" label: ");
-        if (isEpsilon(transChar)) {
-          out.println("\"e\" textcolor:red }");
-        }
-        else {
-          out.println("\"" + edge.getInfo() + "\" }");
-        }
-      }
-    }
-
-    out.println("}");
-    out.close();
-  }
-
 
   /**
    * This overrides @see java.lang.Object#toString().
