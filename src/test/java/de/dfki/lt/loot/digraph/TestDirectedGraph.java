@@ -1,15 +1,8 @@
 package de.dfki.lt.loot.digraph;
 
-import static de.dfki.lt.loot.util.Predicates.*;
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,126 +28,6 @@ public class TestDirectedGraph {
     return result[0];
   }
 
-  /**
-   * Creates a graph from a readable specification.
-   *
-   * @param in
-   *          the reader from which to read the graph
-   * @return the graph
-   * @throws IOException
-   *           if there is an error when reading the graph
-   */
-  public static void readGraph(DiGraph<String> result, Reader in)
-      throws IOException {
-
-    BufferedReader bin = new BufferedReader(in);
-
-    EqualsPredicate<String> eqPred = new EqualsPredicate<>();
-
-    VertexPropertyMap<String> names = new VertexListPropertyMap<String>(result);
-    result.register("names", names);
-
-    String nextLine = null;
-    while ((nextLine = bin.readLine()) != null) {
-      String[] fromTo = nextLine.split("\\s*-->\\s*");
-      if (fromTo.length < 1) {
-        continue;
-      }
-
-      List<Integer> vertices = names.findVertices(fromTo[0], eqPred);
-      int from = -1;
-      if (vertices.isEmpty()) {
-        from = result.newVertex();
-        names.put(from, fromTo[0]);
-      }
-      else {
-        from = vertices.get(0);
-      }
-
-      if (fromTo.length == 2) {
-        String[] token = fromTo[1].split("\\s+");
-
-        for (String name : token) {
-          vertices = names.findVertices(name, eqPred);
-          int to = -1;
-          if (vertices.isEmpty()) {
-            to = result.newVertex();
-            names.put(to, name);
-          }
-          else {
-            to = vertices.get(0);
-          }
-          result.newEdge(fromTo[0] + name, from, to);
-        }
-      }
-    }
-  }
-
-
-  /**
-   * Creates a graph from a readable specification including edge weights.
-   *
-   * @param in
-   *          the reader from which to read the graph
-   * @return the graph
-   * @throws IOException
-   *           if there is an error when reading the graph
-   */
-  public static void readGraphWithWeights(DiGraph<Integer> result, Reader in)
-      throws IOException {
-
-    BufferedReader bin = new BufferedReader(in);
-
-    EqualsPredicate<String> eqPred = new EqualsPredicate<>();
-
-    VertexPropertyMap<String> names = new VertexListPropertyMap<String>(result);
-    result.register("names", names);
-
-    Pattern nw = Pattern.compile("([^(]*)\\(([0-9]*)\\)");
-
-    String nextLine = null;
-    while ((nextLine = bin.readLine()) != null) {
-      String[] fromTo = nextLine.split("\\s*-->\\s*");
-      if (fromTo.length < 1) {
-        continue;
-      }
-
-      List<Integer> nodes = names.findVertices(fromTo[0], eqPred);
-      int from = -1;
-      if (nodes.isEmpty()) {
-        from = result.newVertex();
-        names.put(from, fromTo[0]);
-      }
-      else {
-        from = nodes.get(0);
-      }
-
-      if (fromTo.length == 2) {
-        String[] token = fromTo[1].split("\\s+");
-
-        for (String nameWeight : token) {
-          Matcher nameAndWeight = nw.matcher(nameWeight);
-          if (!nameAndWeight.matches()) {
-            continue;
-          }
-
-          String name = nameAndWeight.group(1);
-          int weight = Integer.parseInt(nameAndWeight.group(2));
-          nodes = names.findVertices(name, eqPred);
-          int to = -1;
-          if (nodes.isEmpty()) {
-            to = result.newVertex();
-            names.put(to, name);
-          }
-          else {
-            to = nodes.get(0);
-          }
-
-          result.newEdge(weight, from, to);
-        }
-      }
-    }
-  }
 
   DiGraph<String> graph;
   VertexPropertyMap<String> names;

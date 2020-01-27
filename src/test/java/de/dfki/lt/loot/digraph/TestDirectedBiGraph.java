@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.digraph;
 
+import static de.dfki.lt.loot.digraph.Utils.*;
 import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import static org.junit.Assert.*;
 
@@ -217,14 +218,14 @@ public class TestDirectedBiGraph {
     // read in graph
     DirectedBiGraph<String> graph = new DirectedBiGraph<String>();
     Utils.readGraph(graph, new StringReader(Utils.exampleBfsGraph));
-    printGraph(graph, "XXXinit");
+    if (print) printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
-    printGraph(graph, "XXXplain");
+    if (print) printGraph(graph, "XXXplain");
     int v = graph.getNumberOfActiveVertices();
     int e = TestDirectedGraph.countEdges(graph);
     graph.compact();
-    printGraph(graph, "XXXcompact");
+    if (print) printGraph(graph, "XXXcompact");
     assertEquals(v, graph.getNumberOfActiveVertices());
     assertEquals(e, TestDirectedGraph.countEdges(graph));
     assertEquals(graph.getNumberOfActiveVertices(),

@@ -1,5 +1,7 @@
 package de.dfki.lt.loot.digraph.algo;
 
+import static de.dfki.lt.loot.digraph.Utils.*;
+import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
 import static junit.framework.Assert.assertEquals;
 
 import java.io.IOException;
@@ -7,11 +9,9 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.dfki.lt.loot.digraph.DiGraph;
-import de.dfki.lt.loot.digraph.TestDirectedGraph;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 
 /**
@@ -22,55 +22,25 @@ import de.dfki.lt.loot.digraph.VertexPropertyMap;
  */
 public class TestTarjanVisitor {
 
-
-  /**
-   * Contains the graph on which the tests run.
-   */
-  private static DiGraph<String> graph;
-
-
-  /**
-   * Initializes the graph.
-   *
-   * @throws IOException
-   *           if there is an error when reading the graph
-   */
-  @BeforeClass
-  public static void oneTimeSetUp()
-      throws IOException {
-
-    String graphString =
-        "s --> w z\n"
-          + "z --> w y\n"
-          + "v --> w s\n"
-          + "w --> x q\n"
-          + "t --> u v\n"
-          + "u --> t v\n"
-          + "x --> z\n"
-          + "q --> x\n"
-          + "y --> x\n";
-
-    graph = new DiGraph<String>();
-    TestDirectedGraph.readGraph(graph, new StringReader(graphString));
-  }
-
-
   /**
    * Tests the {@link TarjanVisitor}.
+   * @throws IOException
    */
   @Test
-  public void test() {
+  public void test() throws IOException {
+    DiGraph<String> graph= new DiGraph<String>();
+    readGraph(new StringReader(exampleGraphCyclic), graph);
 
     // use DFS with Tarjan SCC visitor
     TarjanVisitor<String> visitor = new TarjanVisitor<String>();
     graph.dfs(visitor);
 
     // print resulting SCCs
+    /*
     @SuppressWarnings("unchecked")
     VertexPropertyMap<String> names =
         (VertexPropertyMap<String>)graph.getPropertyMap("names");
     int counter = 0;
-    /*
     for (List<Integer> comp : visitor.getSCCs()) {
       System.out.format("Component %d: ", ++counter);
       for (Integer v : comp) {

@@ -27,14 +27,14 @@ public class TestDirectedGraph2 {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader( exampleBfsGraph));
-    printGraph(graph, "XXXinit");
+    if (print) printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
-    printGraph(graph, "XXXplain");
+    if (print) printGraph(graph, "XXXplain");
     int v = graph.getNumberOfActiveVertices();
     int e = TestDirectedGraph.countEdges(graph);
     graph.compact();
-    printGraph(graph, "XXXcompact");
+    if (print) printGraph(graph, "XXXcompact");
     assertEquals(v, graph.getNumberOfActiveVertices());
     assertEquals(e, TestDirectedGraph.countEdges(graph));
     assertEquals(graph.getNumberOfActiveVertices(),
@@ -67,14 +67,14 @@ public class TestDirectedGraph2 {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
     readGraph(graph, new StringReader( exampleBfsGraph));
-    printGraph(graph, "XXXinit");
+    if (print) printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
-    printGraph(graph, "XXXplain");
+    if (print) printGraph(graph, "XXXplain");
     int v = graph.getNumberOfActiveVertices();
     int e = TestDirectedGraph.countEdges(graph);
     graph.compactStable();
-    printGraph(graph, "XXXcompact");
+    if (print) printGraph(graph, "XXXcompact");
     assertEquals(v, graph.getNumberOfActiveVertices());
     assertEquals(e, TestDirectedGraph.countEdges(graph));
     assertEquals(graph.getNumberOfActiveVertices(),

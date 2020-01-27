@@ -1,7 +1,9 @@
 package de.dfki.lt.loot.digraph.algo;
 
+import static de.dfki.lt.loot.digraph.Utils.*;
+import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
+
 import de.dfki.lt.loot.digraph.DiGraph;
-import de.dfki.lt.loot.digraph.TestDirectedGraph;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 import de.dfki.lt.loot.digraph.algo.TopoOrderVisitor;
 import static junit.framework.Assert.assertEquals;
@@ -27,7 +29,6 @@ public class TestTopoOrderVisitor {
    */
   private static DiGraph<String> graph;
 
-
   /**
    * Initializes the graph.
    *
@@ -37,18 +38,8 @@ public class TestTopoOrderVisitor {
   @BeforeClass
   public static void oneTimeSetUp()
       throws IOException {
-
-    String graphString =
-        "shirt --> tie jacket belt\n"
-          + "tie --> jacket\n"
-          + "belt --> jacket\n"
-          + "watch --> \n"
-          + "undershorts --> pants shoes\n"
-          + "pants --> belt shoes\n"
-          + "socks --> shoes\n";
-
     graph = new DiGraph<String>();
-    TestDirectedGraph.readGraph(graph, new StringReader(graphString));
+    readGraph(new StringReader(exampleGraph), graph);
   }
 
 

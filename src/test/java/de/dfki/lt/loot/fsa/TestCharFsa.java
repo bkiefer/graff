@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.fsa;
 
+import static de.dfki.lt.loot.digraph.Utils.*;
 import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -313,9 +314,9 @@ public class TestCharFsa {
    CharFsa auto1 = CharFsa.compileRegex("([ab]*aaac)");
    CharFsa auto2 = CharFsa.compileRegex("([ab]*aaac)");
    auto2.makeTotal();
-   writeGraphs(auto2, auto1, "dead");
+   if (print) writeGraphs(auto2, auto1, "dead");
    auto2.removeDeadStates();
-   writeGraphs(auto2, auto1, "dead2");
+   if (print) writeGraphs(auto2, auto1, "dead2");
    assertTrue(auto2.isEquivalent(auto1));
  }
 

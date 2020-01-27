@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.fsa;
 
+import static de.dfki.lt.loot.digraph.Utils.*;
 import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import static org.junit.Assert.assertEquals;
 
@@ -34,9 +35,6 @@ public class TestMinimization {
       "0%0 a 1%1 b 2%2",
       "0%0 a 1%0 b 1%0 c 2%1 f 4%1 d 5%2 g 3%2 b 4%3 b 4%4 d 5%5 e 6%5%6",
   };
-
-
-  final static boolean PRINT_GRAPHS = true;
 
   /**
    * Get the new state for the give state using the given state map. If not
@@ -116,11 +114,11 @@ public class TestMinimization {
     for (int i = 0; i < in.length; ++i) {
       CharFsa expected = new CharFsa();
       int[] expected_res = readFromText(out[i], expected);
-      if (PRINT_GRAPHS) printGraph(expected, i+"_min1exp.dot");
+      if (print) printGraph(expected, i+"_min1exp.dot");
 
       CharFsa fsa = new CharFsa();
       int[] res = readFromText(in[i], fsa);
-      if (PRINT_GRAPHS) {
+      if (print) {
         printGraph(fsa, i+"_min0in.dot");
         System.out.println(String.format("%d alphabet symbols",
             fsa.getAlphabet().size()));
@@ -130,7 +128,7 @@ public class TestMinimization {
         System.out.println("states: " + fsa.getNumberOfActiveVertices());
       }
       Minimization.minimize(fsa, fsa.getComparator());
-      if (PRINT_GRAPHS) printGraph(fsa, i+"_min2hout.dot");
+      if (print) printGraph(fsa, i+"_min2hout.dot");
 
       assertEquals("" + i, expected.getNumberOfActiveVertices(),
           fsa.getNumberOfActiveVertices());
@@ -151,7 +149,7 @@ public class TestMinimization {
       int[] res = readFromText(in[i], fsa);
 
       MinimizationBrzowski.minimize(fsa, fsa.getComparator());
-      if (PRINT_GRAPHS) printGraph(fsa, i+"_min2bout.dot");
+      if (print) printGraph(fsa, i+"_min2bout.dot");
 
       assertEquals("" + i, expected.getNumberOfActiveVertices(),
           fsa.getNumberOfActiveVertices());

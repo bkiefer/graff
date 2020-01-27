@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.VertexBooleanPropertyMap;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 import de.dfki.lt.loot.digraph.weighted.OrderedMonoid;
-import de.dfki.lt.loot.digraph.weighted.WeightFunction;
 import de.dfki.lt.loot.jada.FibonacciHeapBase;
 import de.dfki.lt.loot.jada.FibonacciHeapBase.HeapNode;
 import de.dfki.lt.loot.digraph.Graph;
@@ -28,7 +28,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
   private VertexPropertyMap<Edge<EdgeInfo>> predecessor;
 
   private Integer shortestPath(Graph<EdgeInfo> g, int startVertex,
-      final OrderedMonoid<T> ops, final WeightFunction<EdgeInfo, T> getWeight,
+      final OrderedMonoid<T> ops, final Function<Edge<EdgeInfo>, T> getWeight,
       VertexBooleanPropertyMap endVertices) {
     predecessor = new VertexListPropertyMap<Edge<EdgeInfo>>(g);
     distance = new VertexListPropertyMap<T>(g);
@@ -68,7 +68,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
       if (vertexDistance == null)
         break; // unreachable node, we're finished
       for(Edge<EdgeInfo> outEdge : g.getOutEdges(vertex)) {
-        T alt = ops.add(vertexDistance, getWeight.get(outEdge));
+        T alt = ops.add(vertexDistance, getWeight.apply(outEdge));
 
         // might be applied to a undirected graph (edges inversed)
         int target = outEdge.getTargetForSource(vertex);
@@ -92,7 +92,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
   /** Return the shortest path between startVertex and endVertex */
   public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, int endVertex, OrderedMonoid<T> weightOps,
-      WeightFunction<EdgeInfo, T> getWeight) {
+      Function<Edge<EdgeInfo>, T> getWeight) {
     List<Integer> end = new ArrayList<Integer>(1);
     end.add(endVertex);
     return shortestPath(g, startVertex, end, weightOps, getWeight);
@@ -101,7 +101,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
   /** Return the shortest paths to any vertex in the graph (?) */
   public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, OrderedMonoid<T> weightOps,
-      WeightFunction<EdgeInfo, T> getWeight) {
+      Function<Edge<EdgeInfo>, T> getWeight) {
     List<Integer> end = Collections.emptyList();
     return shortestPath(g, startVertex, end, weightOps, getWeight);
   }
@@ -111,7 +111,7 @@ public class DijkstraShortestPath<EdgeInfo, T> {
    */
   public List<Edge<EdgeInfo>> shortestPath(Graph<EdgeInfo> g,
       int startVertex, List<Integer> endVertices,
-      OrderedMonoid<T> weightOps, WeightFunction<EdgeInfo, T> getWeight) {
+      OrderedMonoid<T> weightOps, Function<Edge<EdgeInfo>, T> getWeight) {
     VertexBooleanPropertyMap end = new VertexBooleanPropertyMap(g);
     for (int finalVertex : endVertices) end.put(finalVertex, true);
     Integer shortest = shortestPath(g, startVertex, weightOps, getWeight, end);

@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class Utils {
 
+  public static boolean print = false;
+
   /** Use this example to test your traversal methods, it's the last example
    *  on the first set of slides.
    */
@@ -69,6 +71,48 @@ public class Utils {
     "u --> v\n" +
     "x --> z\n" +
     "q --> x\n";
+
+  /** Use this example to test shortest path methods, it's the last example
+   *  on the first set of slides.
+   */
+  public static final String exampleGraphWeightedEdges =
+    "s --> w (2) z (4)\n" +
+    "z --> w(5) y(9)\n" +
+    "v --> w(1) s(6)\n" +
+    "w --> x(6) q(3)\n" +
+    "t --> u(1) v(9) s(8)\n" +
+    "u --> t(5) v(7)\n" +
+    "x --> z(8) u(7)\n" +
+    "q --> x(2)\n" +
+    "y --> x(5)\n";
+
+  /** Use this example to test shortest path methods, it's the last example
+   *  on the first set of slides.
+   */
+  public static final String exampleUndirGraphWeightedEdges =
+    "s --> w(2) z(4)\n" +
+    "z --> w(5) y(9)\n" +
+    "v --> w(1) s(6)\n" +
+    "w --> x(6) q(3)\n" +
+    "t --> u(1) v(9) s(1)\n" +
+    "u --> v(7)\n" +
+    "x --> z(8) u(7)\n" +
+    "q --> x(2)\n" +
+    "y --> x(5)\n";
+
+  /** Use this example to test A* search methods, it's the last example
+   *  on the first set of slides.
+   */
+  public static final String exampleGraphNodePositions =
+    "s (1.3,6) --> w z\n" +
+    "z (1,4) --> w y\n" +
+    "v (4,4) --> w s\n" +
+    "w (3,2) --> x q\n" +
+    "t (5,6) --> u v s\n" +
+    "u (6,4) --> v\n" +
+    "x (0,0) --> z u\n" +
+    "q (4.5,0) --> x\n" +
+    "y (0,2) --> x\n";
 
   public DiGraph<String> graphCyclic;
   public DiGraph<String> graphAcyclic;
