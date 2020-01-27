@@ -10,20 +10,20 @@ import java.util.function.BiPredicate;
 public class VertexIsomorphism<ValueType>
   implements VertexPropertyMap<ValueType> {
 
-  private DiGraph<?> _graph;
+  private Graph<?> _graph;
 
   private ArrayList<ValueType> _map;
 
   private Map<ValueType, Integer> _inverseMap;
 
-  public VertexIsomorphism(DiGraph<?> graph,
+  public VertexIsomorphism(Graph<?> graph,
     Map<ValueType, Integer> invMap) {
     _map = new ArrayList<ValueType>();
     _inverseMap = invMap;
     _graph = graph;
   }
 
-  public VertexIsomorphism(DiGraph<?> graph) {
+  public VertexIsomorphism(Graph<?> graph) {
     this(graph, new HashMap<ValueType, Integer>());
   }
 

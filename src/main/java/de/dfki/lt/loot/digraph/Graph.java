@@ -37,6 +37,13 @@ public interface Graph<EI> extends Iterable<Integer> {
   /** return the edges ending in this vertex, may not return null */
   // public abstract Iterable<Edge<EdgeInfo>> getInEdges(int vertex);
 
+  /** is the given vertex a deleted vertex of this graph?
+   * @precondition vertex must be smaller than nextFreeVertex
+   * @return <code>true</code> if the vertex is deleted, <code>false</code>
+   *         otherwise.
+   */
+  public boolean isDeletedVertex(int vertex);
+
   /** This removes the given vertex from this directed graph.
    *
    * @param vertex the vertex to remove from the graph
@@ -52,6 +59,9 @@ public interface Graph<EI> extends Iterable<Integer> {
 
 
   public abstract Edge<EI> newEdge(EI info, int from, int to);
+
+  /** Is there an edge starting at from and ending in to? */
+  public abstract boolean hasEdge(int from, int to);
 
   /**
    * This returns the first edges emerging from vertex where the edge info is
@@ -103,4 +113,37 @@ public interface Graph<EI> extends Iterable<Integer> {
 
   /** return the registered property map with the given name, if it exists */
   public abstract BitSet getBooleanPropertyMap(String name);
+
+  /** Visit all vertices of this graph in a depth first manner. The vertex list
+   *  is traversed in order, and every non-visited vertex is then taken as
+   *  start vertex, consecutively.
+   *  The desired functionality can be implemented by the given {@link
+   *  GraphVisitor} argument.
+   */
+  public abstract void dfs(GraphVisitor<EI> visitor);
+
+  /** Visit the vertices of this graph that are reachable from vertex in a depth
+   *  first manner.
+   *  The desired functionality can be implemented by the given {@link
+   *  GraphVisitor} argument.
+   */
+  public abstract void dfs(int vertex, GraphVisitor<EI> visitor);
+
+  /** Visit the vertices of this graph that are reachable from vertex in a depth
+   *  first manner.
+   *  The desired functionality can be implemented by the given {@link
+   *  GraphVisitor} argument.
+   *  @param vertex the vertex to start the dfs at
+   *  @param converse if true, the dfs runs on a lazy converse of a
+   *       {@link DiGraph}, which means that the edge direction is inverse,
+   *       i.e., getSource() returns the target node, getTarget() the source
+   */
+  public void dfsConverse(int vertex, GraphVisitor<EI> visitor);
+
+  /** Visit all vertices of this graph in a breadth first manner. The vertex
+   *  list is traversed in order, and every non-visited vertex is then put onto
+   *  a queue, consecutively. The desired functionality can be
+   *  implemented by the given {@link GraphVisitor} argument.
+   */
+  public void bfs(GraphVisitor<EI> visitor);
 }

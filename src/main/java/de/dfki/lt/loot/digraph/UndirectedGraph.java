@@ -1,12 +1,11 @@
 package de.dfki.lt.loot.digraph;
 
-import java.util.BitSet;
 import java.util.Comparator;
 import java.util.Iterator;
 
 import de.dfki.lt.loot.util.DelegateIterator;
 
-public class UndirectedGraph<EI> implements Graph<EI> {
+public class UndirectedGraph<EI> extends AbstractGraph<EI> {
   DirectedBiGraph<EI> _impl;
 
   public UndirectedGraph() {
@@ -27,7 +26,16 @@ public class UndirectedGraph<EI> implements Graph<EI> {
    */
   public boolean isVertex(int vertex) { return _impl.isVertex(vertex); }
 
-  /** Return the number of vertices in this graph (including deleted vertices)
+  /** is the given vertex a deleted vertex of this graph?
+   * @precondition vertex must be smaller than nextFreeVertex
+   * @return <code>true</code> if the vertex is deleted, <code>false</code>
+   *         otherwise.
+   */
+  public boolean isDeletedVertex(int vertex) {
+    return _impl.isDeletedVertex(vertex);
+  }
+
+ /** Return the number of vertices in this graph (including deleted vertices)
    */
   public int getNumberOfVertices() { return _impl.getNumberOfVertices(); }
 
@@ -35,6 +43,11 @@ public class UndirectedGraph<EI> implements Graph<EI> {
   public Iterable<Edge<EI>> getOutEdges(int vertex) {
     return new DelegateIterator<Edge<EI>>(_impl.getOutEdges(vertex),
         _impl.getInEdges(vertex));
+  }
+
+  /** Is there an edge starting at from and ending in to? */
+  public boolean hasEdge(int from, int to) {
+    return _impl.hasEdge(from, to) || _impl.hasEdge(to, from);
   }
 
   /** return true if the node has at least one outgoing edge */
@@ -118,29 +131,5 @@ public class UndirectedGraph<EI> implements Graph<EI> {
   @Override
   public void cleanupEdges() {
     // a no-op, see DirectedBiGraph
-  }
-
-  /** register a property map with this graph, so that it can be retrieved
-   *  by name and will be synchronized regarding delete and compact operations
-   */
-  public void register(String name, VertexPropertyMap<?> map){
-    _impl.register(name, map);
-  }
-
-  /** return the registered property map with the given name, if it exists */
-  public VertexPropertyMap<?> getPropertyMap(String name){
-    return _impl.getPropertyMap(name);
-  }
-
-  /** register a property map with this graph, so that it can be retrieved
-   *  by name and will be synchronized regarding delete and compact operations
-   */
-  public void register(String name, BitSet map){
-    _impl.register(name, map);
-  }
-
-  /** return the registered property map with the given name, if it exists */
-  public BitSet getBooleanPropertyMap(String name){
-    return _impl.getBooleanPropertyMap(name);
   }
 }

@@ -1,5 +1,6 @@
 package de.dfki.lt.loot.digraph;
 
+import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
 import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import static de.dfki.lt.loot.digraph.Utils.*;
 
@@ -26,7 +27,7 @@ public class TestDirectedGraph2 {
   public void testCompact0() throws IOException {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
-    readGraph(graph, new StringReader( exampleBfsGraph));
+    readGraph(new StringReader( exampleBfsGraph), graph);
     if (print) printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
@@ -46,7 +47,7 @@ public class TestDirectedGraph2 {
   public void testCompact1() throws IOException {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
-    readGraph(graph, new StringReader(exampleBfsGraph));
+    readGraph(new StringReader(exampleBfsGraph), graph);
     //graph.printGraph("XXXinit");
     graph.removeVertex(0);
     graph.removeVertex(7);
@@ -66,7 +67,7 @@ public class TestDirectedGraph2 {
   public void testCompactStable0() throws IOException {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
-    readGraph(graph, new StringReader( exampleBfsGraph));
+    readGraph(new StringReader(exampleBfsGraph), graph);
     if (print) printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
@@ -86,7 +87,7 @@ public class TestDirectedGraph2 {
   public void testCompactStable1() throws IOException {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
-    readGraph(graph, new StringReader(exampleBfsGraph));
+    readGraph(new StringReader(exampleBfsGraph), graph);
     //graph.printGraph("XXXinit");
     graph.removeVertex(0);
     graph.removeVertex(7);

@@ -1,5 +1,7 @@
 package de.dfki.lt.loot.digraph.algo;
 
+import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
+
 import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.Utils;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
@@ -23,7 +25,7 @@ public class TestCollectTimesVisitor {
   public void testDFS() throws IOException {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
-    Utils.readGraph(graph, new StringReader(Utils.exampleGraph));
+    readGraph(new StringReader(Utils.exampleGraph), graph);
     //System.out.println(graph.toString(graph.getPropertyMap("names")));
 
     // use DFS
@@ -58,7 +60,7 @@ public class TestCollectTimesVisitor {
   public void testBFS() throws IOException {
     // read in graph
     DiGraph<String> graph = new DiGraph<String>();
-    Utils.readGraph(graph, new StringReader(Utils.exampleBfsGraph));
+    readGraph(new StringReader(Utils.exampleBfsGraph), graph);
 
     // use BFS
     BfsTimesVisitor<String> bfsVisitor = new BfsTimesVisitor<String>();

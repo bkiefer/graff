@@ -317,7 +317,7 @@ implements AbstractAutomaton<EdgeInfo> {
     final BitSet visited = new BitSet();
     dfs(_initialState, new GraphVisitorAdapter<EdgeInfo>() {
       @Override
-      public void discoverVertex(int v, DiGraph<EdgeInfo> g){
+      public void discoverVertex(int v, Graph<EdgeInfo> g){
         visited.set(v);
       }
     });
@@ -327,7 +327,7 @@ implements AbstractAutomaton<EdgeInfo> {
     for (int fin : getFinalStates()) {
       converse.dfsConverse(fin, new GraphVisitorAdapter<EdgeInfo>() {
         @Override
-        public void discoverVertex(int v, DiGraph<EdgeInfo> g){
+        public void discoverVertex(int v, Graph<EdgeInfo> g){
           visited.set(v);
         }
       });
@@ -1005,7 +1005,7 @@ implements AbstractAutomaton<EdgeInfo> {
      * {@inheritDoc}
      */
     @Override
-    public void discoverVertex(int v, DiGraph<EdgeInfo> g) {
+    public void discoverVertex(int v, Graph<EdgeInfo> g) {
 
       if (FiniteAutomaton.this.isFinalState(v)) {
         this.collectedFinalStates.set(v);

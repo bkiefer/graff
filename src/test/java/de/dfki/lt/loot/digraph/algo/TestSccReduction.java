@@ -5,6 +5,7 @@
  */
 package de.dfki.lt.loot.digraph.algo;
 
+import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
 import static de.dfki.lt.loot.digraph.Utils.*;
 import static org.junit.Assert.*;
 
@@ -12,6 +13,7 @@ import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.VertexListPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 
 import org.junit.Test;
@@ -24,7 +26,8 @@ public class TestSccReduction {
 
   @Test
   public void testSCCReduction() throws IOException {
-    DiGraph<String> graphCyclic = readGraph(exampleGraphCyclic);
+    DiGraph<String> graphCyclic = new DiGraph<>();
+    readGraph(new StringReader(exampleGraphCyclic), graphCyclic);
     //graphCyclic.printGraph("input_cyclic");
     DiGraph<String> red = SccReduction.acyclicSccReduction(graphCyclic);
     VertexPropertyMap<String> redNames = new VertexListPropertyMap<String>(red);
@@ -50,7 +53,8 @@ public class TestSccReduction {
 
   @Test
   public void testAcyclicReduction() throws IOException {
-    DiGraph<String> graphAcyclic = readGraph(exampleGraphAcyclic);
+    DiGraph<String> graphAcyclic = new DiGraph<>();
+    readGraph(new StringReader(exampleGraphAcyclic), graphAcyclic);
     // graphAcyclic.printGraph("input_acyclic");
     DiGraph<String> red = SccReduction.acyclicSccReduction(graphAcyclic);
     assertEquals(graphAcyclic.getNumberOfVertices(),

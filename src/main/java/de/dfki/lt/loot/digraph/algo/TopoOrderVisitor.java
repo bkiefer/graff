@@ -1,6 +1,6 @@
 package de.dfki.lt.loot.digraph.algo;
 
-import de.dfki.lt.loot.digraph.DiGraph;
+import de.dfki.lt.loot.digraph.Graph;
 import de.dfki.lt.loot.digraph.GraphVisitorAdapter;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class TopoOrderVisitor<EdgeInfo> extends GraphVisitorAdapter<EdgeInfo> {
    * {@inheritDoc}
    */
   @Override
-  public void finishVertex(int v, DiGraph<EdgeInfo> g) {
+  public void finishVertex(int v, Graph<EdgeInfo> g) {
 
     // add a finished vertex at the start of the list
     if (_inverse)

@@ -16,12 +16,12 @@ import org.junit.Test;
  */
 public class TestDirectedGraph {
 
-  public static <T> int countEdges(DiGraph<T> graph) {
+  public static <T> int countEdges(Graph<T> graph) {
     final int[] result = { 0 };
     graph.dfs(new GraphVisitorAdapter<T>() {
       @Override
       @SuppressWarnings("unused")
-      public void discoverVertex(int v, DiGraph<T> g) {
+      public void discoverVertex(int v, Graph<T> g) {
         for (Edge<T> e : g.getOutEdges(v)) ++result[0];
       }
     });

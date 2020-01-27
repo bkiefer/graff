@@ -1,9 +1,11 @@
 package de.dfki.lt.loot.digraph.algo;
 
-import static org.junit.Assert.*;
+import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
 import static de.dfki.lt.loot.digraph.Utils.*;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,15 +22,15 @@ public class TestTransitiveClosure {
    *  on the first set of slides.
    */
 
-  public DiGraph<String> graphAcyclic;
-  public DiGraph<String> graphCyclic;
+  public DiGraph<String> graphAcyclic = new DiGraph<>();
+  public DiGraph<String> graphCyclic = new DiGraph<>();
 
   @Before
   public void setUp() {
     // read in graph
     try {
-      graphCyclic = readGraph(exampleGraphCyclic);
-      graphAcyclic = readGraph(exampleGraphAcyclic);
+      readGraph(new StringReader(exampleGraphCyclic), graphCyclic);
+      readGraph(new StringReader(exampleGraphAcyclic), graphAcyclic);
     } catch (IOException e) {
       e.printStackTrace();
     }

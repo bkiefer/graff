@@ -5,15 +5,6 @@
  */
 package de.dfki.lt.loot.digraph;
 
-import static de.dfki.lt.loot.util.Predicates.*;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.List;
-
-
 /** Utilities for tests, including test graphs in string form.
  *
  * @author kiefer
@@ -113,74 +104,4 @@ public class Utils {
     "x (0,0) --> z u\n" +
     "q (4.5,0) --> x\n" +
     "y (0,2) --> x\n";
-
-  public DiGraph<String> graphCyclic;
-  public DiGraph<String> graphAcyclic;
-
-
-  /** create a graph from a readable specification.
-   *  This method has default visibility to be able to use it in other test
-   *  modules.
-   */
-  public static void readGraph(DiGraph<String> result, Reader in)
-      throws IOException {
-    BufferedReader bin = new BufferedReader(in);
-
-    EqualsPredicate<String> eqPred = new EqualsPredicate<String>();
-
-    VertexPropertyMap<String> names = new VertexListPropertyMap<String>(result);
-    result.register("names", names);
-
-    String nextLine = null;
-    while((nextLine = bin.readLine()) != null) {
-      String[] fromTo = nextLine.split("\\s*-->\\s*");
-      if (fromTo.length < 1)
-        continue;
-
-      List<Integer> nodes = names.findVertices(fromTo[0], eqPred);
-      int from = -1;
-      if (nodes.isEmpty()) {
-        from = result.newVertex();
-        names.put(from, fromTo[0]);
-      } else {
-        from = nodes.get(0);
-      }
-
-      if (fromTo.length == 2) {
-        String[] token = fromTo[1].split("\\s+");
-
-        for(String name : token) {
-          nodes = names.findVertices(name, eqPred);
-          int to = -1;
-          if (nodes.isEmpty()) {
-            to = result.newVertex();
-            names.put(to, name);
-          } else {
-            to = nodes.get(0);
-          }
-          result.newEdge(fromTo[0] + " --> " + name, from, to);
-        }
-      }
-    }
-  }
-
-  /** create a new graph from a readable specification.
-   *  This method has default visibility to be able to use it in other test
-   *  modules.
-   */
-  public static DiGraph<String> readGraph(Reader in) throws IOException {
-    DiGraph<String> result = new DiGraph<String>();
-    readGraph(result, in);
-    return result;
-  }
-
-  /** create a new graph from a readable specification.
-   *  This method has default visibility to be able to use it in other test
-   *  modules.
-   */
-  public static DiGraph<String> readGraph(String in) throws IOException {
-      DiGraph<String> result = new DiGraph<String>();
-      readGraph(result, new StringReader(in));
-      return result;
-    }
 }

@@ -1,6 +1,7 @@
 package de.dfki.lt.loot.digraph;
 
 import static de.dfki.lt.loot.digraph.Utils.*;
+import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
 import static de.dfki.lt.loot.digraph.io.GraphPrinterFactory.printGraph;
 import static org.junit.Assert.*;
 
@@ -217,7 +218,7 @@ public class TestDirectedBiGraph {
   public void testCompact0() throws IOException {
     // read in graph
     DirectedBiGraph<String> graph = new DirectedBiGraph<String>();
-    Utils.readGraph(graph, new StringReader(Utils.exampleBfsGraph));
+    readGraph(new StringReader(Utils.exampleBfsGraph), graph);
     if (print) printGraph(graph, "XXXinit");
     graph.removeVertex(3);
     graph.removeVertex(5);
@@ -237,7 +238,7 @@ public class TestDirectedBiGraph {
   public void testCompact1() throws IOException {
     // read in graph
     DirectedBiGraph<String> graph = new DirectedBiGraph<String>();
-    Utils.readGraph(graph, new StringReader(Utils.exampleBfsGraph));
+    readGraph(new StringReader(Utils.exampleBfsGraph), graph);
     //graph.printGraph("XXXinit");
     graph.removeVertex(0);
     graph.removeVertex(7);
