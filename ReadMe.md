@@ -13,6 +13,7 @@ Finally, there is code to handle finite state automata, based on the graph libra
 - Depth/Breadth first search
 - topological order
 - Dijkstra shortest path
+- A* shortest path
 - Strongly Connected Components graph reduction
 - Transitive Closure
 - Transitive Reduction
