@@ -3,14 +3,13 @@ package de.dfki.lt.loot.digraph.algo;
 import static de.dfki.lt.loot.digraph.Utils.*;
 import static de.dfki.lt.loot.digraph.io.SimpleGraphReader.*;
 
+import de.dfki.lt.loot.digraph.CyclicGraphException;
 import de.dfki.lt.loot.digraph.DiGraph;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
-import de.dfki.lt.loot.digraph.algo.TopoOrderVisitor;
 import static junit.framework.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Iterator;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,23 +43,17 @@ public class TestTopoOrderVisitor {
 
 
   /**
-   * Tests the {@link TopoOrderVisitor}.
+   * Tests the {@link TopoOrderVisitor} via graph.toposort()
+   * @throws CyclicGraphException
    */
   @Test
-  public void test() {
-
-    //System.out.println(graph);
+  public void test() throws CyclicGraphException {
     // calculate topological order
-    TopoOrderVisitor<String> topoVisitor = new TopoOrderVisitor<>();
-    graph.dfs(topoVisitor);
     @SuppressWarnings("unchecked")
     VertexPropertyMap<String> names =
         (VertexPropertyMap<String>)graph.getPropertyMap("names");
-    Iterator<Integer> topoIt = topoVisitor.getSortedVertices().iterator();
     StringBuilder result = new StringBuilder();
-    while (topoIt.hasNext()) {
-      int v = topoIt.next();
-      //System.out.println(names.get(v));
+    for (int v : graph.topoSort()) {
       result.append(String.format("%s ", names.get(v)));
     }
     assertEquals(
@@ -70,22 +63,16 @@ public class TestTopoOrderVisitor {
 
   /**
    * Tests the {@link TopoOrderVisitor}.
+   * @throws CyclicGraphException
    */
   @Test
-  public void testInverse() {
-
-    //System.out.println(graph);
-    // calculate topological order
-    TopoOrderVisitor<String> topoVisitor = new TopoOrderVisitor<>(true);
-    graph.dfs(topoVisitor);
+  public void testInverse() throws CyclicGraphException {
+	// calculate inverse topological order
     @SuppressWarnings("unchecked")
     VertexPropertyMap<String> names =
         (VertexPropertyMap<String>)graph.getPropertyMap("names");
-    Iterator<Integer> topoReverseIt = topoVisitor.getSortedVertices().iterator();
     StringBuilder result = new StringBuilder();
-    while (topoReverseIt.hasNext()) {
-      int v = topoReverseIt.next();
-      //System.out.println(names.get(v));
+    for (int v : graph.topoSortInverse()) {
       result.append(String.format("%s ", names.get(v)));
     }
     assertEquals(

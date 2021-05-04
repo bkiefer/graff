@@ -3,6 +3,7 @@ package de.dfki.lt.loot.digraph;
 import java.util.*;
 import java.util.function.Function;
 
+import de.dfki.lt.loot.digraph.algo.TopoOrderVisitor;
 import de.dfki.lt.loot.util.FilteredIterator;
 
 
@@ -648,8 +649,42 @@ public class DiGraph<EI> extends AbstractGraph<EI> {
     return result;
   }
 
-  /** Returns the vertices in topological order, in case there are no cycles,
-   *  null otherwise.
+  /** Return all nodes that have no incoming edges (complexity O(E)) */
+  public List<Integer> findSources() {
+	  List<Integer> result = new ArrayList<>();
+	  BitSet source = new BitSet();
+	  source.set(0, getNumberOfVertices(), true);
+	  for(int vertex = 0; vertex < getNumberOfVertices(); ++vertex) {
+		  if (! isDeletedVertex(vertex)) { 
+			  for (Edge<EI> e : _outEdges.get(vertex)) {
+				  source.clear(e.getTarget());
+			  }
+		  }
+	  }
+	  for (int i = source.nextSetBit(0); i >= 0; i = source.nextSetBit(i+1)) {
+		  if (i == Integer.MAX_VALUE) {
+			  break; // or (i+1) would overflow
+		  }
+		  result.add(i);
+	  }
+	  return result;
+  }
+  
+  /** Return all nodes that have no outgoing edges (complexity O(V)) */
+  public List<Integer> findSinks() {
+	  List<Integer> result = new ArrayList<>();
+	  for(int vertex = 0; vertex < getNumberOfVertices(); ++vertex) {
+		  if (! isDeletedVertex(vertex) &&
+				  this._outEdges.get(vertex).isEmpty()) {
+			  result.add(vertex);
+		  }
+	  }
+	  return result; 
+  }
+	  
+  /** Returns the vertices reachable from start in topological order, in case 
+   *  there are no cycles, otherwise throws a CyclicGraphException.
+   *  @throws CyclicGraphException if the graph is cyclic
    */
   public List<Integer> topoSort(int start) throws CyclicGraphException {
     try {
@@ -683,5 +718,25 @@ public class DiGraph<EI> extends AbstractGraph<EI> {
         throw rtex;
       }
     }
+  }
+  
+  /** Returns the vertices in topological order, in case there are no cycles,
+   *  otherwise throws a CyclicGraphException.
+   *  @throws CyclicGraphException if the graph is cyclic
+   */
+  public Iterable<Integer> topoSort() throws CyclicGraphException {
+	TopoOrderVisitor<EI> topoVisitor = new TopoOrderVisitor<>();
+	dfs(topoVisitor);
+    return topoVisitor.getSortedVertices();
+  }  
+  
+  /** Returns the vertices in inverse topological order, in case there are no
+   *  cycles, otherwise throws a CyclicGraphException.
+   *  @throws CyclicGraphException if the graph is cyclic
+   */
+  public Iterable<Integer> topoSortInverse() throws CyclicGraphException {
+	TopoOrderVisitor<EI> topoVisitor = new TopoOrderVisitor<>(true);
+	dfs(topoVisitor);
+    return topoVisitor.getSortedVertices();
   }
 }
