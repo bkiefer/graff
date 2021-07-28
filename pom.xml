@@ -7,15 +7,15 @@
 
   <groupId>de.dfki.mlt</groupId>
   <artifactId>graff</artifactId>
-  <version>0.6-SNAPSHOT</version>
+  <version>0.7</version>
   <packaging>jar</packaging>
 
   <inceptionYear>2009</inceptionYear>
 
   <licenses>
     <license>
-      <name>LGPL 3 or later</name>
-      <url>http://www.gnu.org/licenses/lgpl.html</url>
+      <name>Apache 2.0 License</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
