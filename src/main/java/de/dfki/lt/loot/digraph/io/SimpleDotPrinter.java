@@ -17,9 +17,12 @@
 package de.dfki.lt.loot.digraph.io;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.dfki.lt.loot.digraph.Edge;
 import de.dfki.lt.loot.digraph.Graph;
+import de.dfki.lt.loot.digraph.VertexBooleanPropertyMap;
 import de.dfki.lt.loot.digraph.VertexPropertyMap;
 
 /** Class to print a directed graph in graphviz syntax. If a VertexPropertyMap
@@ -33,6 +36,11 @@ public class SimpleDotPrinter<T> implements GraphElementPrinter<T> {
   @SuppressWarnings("unused")
   private Graph<T> _graph;
   private VertexPropertyMap<String> _nodeNames;
+  
+  public static String HIGHLIGHT = ", color=\"red\"";
+
+  private Set<Integer> _nodesToHighlight = new HashSet<>();
+  private Set<Edge<T>> _edgesToHighlight = new HashSet<>();
 
   @SuppressWarnings("unchecked")
   public void startGraph(PrintWriter out, Graph<T> graph) {
@@ -47,12 +55,22 @@ public class SimpleDotPrinter<T> implements GraphElementPrinter<T> {
     _nodeNames = null;
   }
 
+  public void highlightNode(int node) {
+    _nodesToHighlight.add(node);
+  }
+  
+  public void highlightEdge(Edge<T> edge) {
+    _edgesToHighlight.add(edge);
+  }
+  
   public void printNode(PrintWriter out, int node) {
     out.print("n" + node);
+    String hl = _nodesToHighlight.contains(node) ? HIGHLIGHT : "";
     if (_nodeNames != null) {
-      out.print(" [label=\"" + _nodeNames.get(node) + "(" +  node + ")\"]");
+      out.print(
+          " [label=\"" + _nodeNames.get(node) + "(" + node + ")\" " + hl + "]");
     } else {
-      out.print(" [shape=point]");
+      out.print(" [shape=point " + hl + "]");
     }
     out.println(";");
   }
@@ -63,6 +81,10 @@ public class SimpleDotPrinter<T> implements GraphElementPrinter<T> {
         + " -> n"
         + edge.getTarget()
         + "[ label= ");
-    out.println("\"" + edge.getInfo() +"\"];");
+    out.print("\"" + edge.getInfo() +"\"");
+    if (_edgesToHighlight.contains(edge)) {
+      out.print(" " + HIGHLIGHT);
+    }
+    out.println("];");
   }
 }

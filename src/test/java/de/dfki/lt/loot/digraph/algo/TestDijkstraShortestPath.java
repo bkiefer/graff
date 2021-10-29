@@ -28,6 +28,7 @@ import java.util.List;
 import org.junit.Test;
 
 import de.dfki.lt.loot.digraph.*;
+import de.dfki.lt.loot.digraph.io.SimpleDotPrinter;
 import de.dfki.lt.loot.digraph.weighted.IntMonoid;
 
 /**
@@ -50,7 +51,7 @@ public class TestDijkstraShortestPath {
     readEdgeWeightGraph(new StringReader(in), graph);
 
     //System.out.println(graph);
-    if (print) printGraph(graph, "testGraph");
+    //if (print) printGraph(graph, "testGraph");
 
     // use DFS with special visitor
     DijkstraShortestPath<Integer, Integer> algorithm =
@@ -68,10 +69,20 @@ public class TestDijkstraShortestPath {
     int i = 0;
     int curr = 0;
     for (Edge<Integer> edge : result) {
+      
       /*System.out.print("--" +
                        edge.getInfo() + "-->" +
                        names.get(edge.getTarget()));*/
       assertEquals(res[i++], names.get(curr = edge.getTargetForSource(curr)));
+    }
+    if (print) {
+      SimpleDotPrinter<Integer> pr = new SimpleDotPrinter<Integer>();
+      for (Edge<Integer> edge : result) {
+        pr.highlightEdge(edge);
+        pr.highlightNode(edge.getSource());
+        pr.highlightNode(edge.getTarget());
+        printGraph(graph, "testGraph", pr);
+      }
     }
     //System.out.println();
   }

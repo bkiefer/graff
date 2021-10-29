@@ -152,7 +152,7 @@ public class Edge<EdgeInfo> {
 
   @Override
   public int hashCode() {
-    return (_from << 3 + _to) << 3 + _info.hashCode();
+    return (_from << 3 + _to) << 3 + ((_info == null) ? 0 : _info.hashCode());
   }
 
 }
