@@ -1,5 +1,7 @@
 # graff - A library for directed graphs and graph algorithms
 
+[![mvn build](https://github.com/bkiefer/graff/actions/workflows/maven.yml/badge.svg)](https://github.com/bkiefer/graff/actions/workflows/maven.yml)
+
 This library contains a polished version of a graph implementation that emerged
 from teaching Java at the University of Saarland. To support the graph
 algorithms efficiently, there are some implementations of not-so-common data
