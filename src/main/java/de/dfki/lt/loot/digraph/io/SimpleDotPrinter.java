@@ -33,57 +33,87 @@ import de.dfki.lt.loot.digraph.VertexPropertyMap;
  *
  */
 public class SimpleDotPrinter<T> implements GraphElementPrinter<T> {
-  @SuppressWarnings("unused")
   private Graph<T> _graph;
   private VertexPropertyMap<String> _nodeNames;
-  
+
+  private boolean addNodeNumberToName = false;
+
   public static String HIGHLIGHT = ", color=\"red\"";
 
-  private Set<Integer> _nodesToHighlight = new HashSet<>();
+  private VertexBooleanPropertyMap _nodesToHighlight;
   private Set<Edge<T>> _edgesToHighlight = new HashSet<>();
 
+  private String _preamble = "layout=neato;\n"
+      + "overlap=false;\n"
+      + "splines=true;\n"
+      + "mode=KK;\n"
+      + "//Damping=.5;\n"
+      + "node [shape=\"box\"];";
+
+  @Override
   @SuppressWarnings("unchecked")
   public void startGraph(PrintWriter out, Graph<T> graph) {
     _graph = graph;
     _nodeNames = (VertexPropertyMap<String>) graph.getPropertyMap("names");
+    _nodesToHighlight = new VertexBooleanPropertyMap(_graph);
+
     out.println("digraph test { ");
+    out.println(_preamble);
   }
 
+  @Override
   public void endGraph(PrintWriter out) {
     out.println("}");
     _graph = null;
     _nodeNames = null;
   }
 
-  public void highlightNode(int node) {
-    _nodesToHighlight.add(node);
+  public void addNodeNumberToName(boolean val) {
+    addNodeNumberToName = val;
   }
-  
+
+  public void setPreamble(String s) {
+    _preamble = s;
+  }
+
+  public void highlightNode(int node) {
+    _nodesToHighlight.set(node);
+  }
+
   public void highlightEdge(Edge<T> edge) {
     _edgesToHighlight.add(edge);
   }
-  
-  public void printNode(PrintWriter out, int node) {
-    out.print("n" + node);
-    String hl = _nodesToHighlight.contains(node) ? HIGHLIGHT : "";
-    if (_nodeNames != null) {
-      out.print(
-          " [label=\"" + _nodeNames.get(node) + "(" + node + ")\" " + hl + "]");
-    } else {
-      out.print(" [shape=point " + hl + "]");
-    }
-    out.println(";");
+
+  private String escapeDoubleQuotes(String s) {
+    return s.replaceAll("\"", "\\\\\"");
   }
 
+  @Override
+  public void printNode(PrintWriter out, int node) {
+    out.print("n" + node);
+    if (_nodeNames != null) {
+      String name = escapeDoubleQuotes(_nodeNames.get(node));
+      if (addNodeNumberToName) {
+        name += "(" + node + ")";
+      }
+      out.print(" [label=\"" + name + "\"");
+    } else {
+      out.print(" [shape=point");
+    }
+    if (_nodesToHighlight.get(node)) {
+      out.print(HIGHLIGHT);
+    }
+    out.println("];");
+  }
+
+  @Override
   public void printEdge(PrintWriter out, Edge<T> edge) {
-    out.print("n"
-        + edge.getSource()
-        + " -> n"
-        + edge.getTarget()
-        + "[ label= ");
-    out.print("\"" + edge.getInfo() +"\"");
+    out.print("n" + edge.getSource() + " -> n" + edge.getTarget()
+        + "[ label=\"");
+    out.print(escapeDoubleQuotes(edge.getInfo().toString()));
+    out.print('"');
     if (_edgesToHighlight.contains(edge)) {
-      out.print(" " + HIGHLIGHT);
+      out.print(HIGHLIGHT);
     }
     out.println("];");
   }

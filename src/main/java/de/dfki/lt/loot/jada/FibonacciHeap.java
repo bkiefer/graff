@@ -57,7 +57,6 @@ public class FibonacciHeap<Key extends Comparable<? super Key>, Data>
    *  @return a HeapNode that contains the key and data objects and can be used
    *          to decrease the key.
    */
-  @SuppressWarnings("unchecked")
   public HeapNode<Key, Data> insert(Data d, Key k) {
     if (debug) System.out.println("insert " + d);
     ++count;
@@ -78,7 +77,7 @@ public class FibonacciHeap<Key extends Comparable<? super Key>, Data>
     super.decreaseKey(node);
   }
 
-  @SuppressWarnings("unchecked")
+  @Override
   public HeapNode<Key, Data> minimum() {
     return (HeapNode<Key, Data>)super.minimum();
   }
